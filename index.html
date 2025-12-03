@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -683,60 +684,102 @@
                 const n = r['Equipment Name']; if(n) eqCounts[n] = (eqCounts[n] || 0) + 1;
             });
             const top10 = Object.entries(eqCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
-            const labels = top10.map(i => {
-                let name = i[0];
-                if(name.length > 25) return name.substring(0, 15) + '...' + name.substring(name.length - 5);
-                return name;
-            });
 
-            drawChart('cTopEquip', 'bar', {
-                labels: labels,
-                datasets: [{label: 'Open Faults', data: top10.map(i => i[1]), backgroundColor: '#ef4444', indexAxis: 'y'}]
-            }, 'Equipment Name', { 
-                indexAxis: 'y', layout: { padding: { left: 0 } }, 
-                scales: { x: { display: false }, y: { display: true, ticks: { autoSkip: false, font: { size: 11 }, crossAlign: 'near' } } } 
-            });
+// 1. Create a separate array for FULL names
+const fullNames = top10.map(i => i[0]); 
+
+const labels = top10.map(i => i[0]); 
+
+drawChart('cTopEquip', 'bar', {
+    labels: labels, // Pass FULL names here
+    datasets: [{
+        label: 'Open Faults', 
+        data: top10.map(i => i[1]), 
+        backgroundColor: '#ef4444', 
+        indexAxis: 'y'
+    }]
+}, 'Equipment Name', { 
+    indexAxis: 'y', 
+    layout: { padding: { left: 0 } },
+    // We will handle truncation inside the scale options now
+    scales: { 
+        x: { display: false }, 
+        y: { 
+            display: true, 
+            ticks: { 
+                autoSkip: false, 
+                font: { size: 11 }, 
+                crossAlign: 'near',
+                // ADD THIS CALLBACK FUNCTION:
+                callback: function(value) {
+                    const label = this.getLabelForValue(value);
+                    if (typeof label === 'string' && label.length > 25) {
+                        return label.substring(0, 15) + '...' + label.substring(label.length - 5);
+                    }
+                    return label;
+                }
+            } 
+        } 
+    } 
+});
         }
 
         function drawChart(id, type, data, filterKey, extraOptions={}){
-            const ctx=document.getElementById(id).getContext('2d');
-            if(charts[id])charts[id].destroy();
+    const ctx = document.getElementById(id).getContext('2d');
+    if(charts[id]) charts[id].destroy();
 
-            const isHorizontal = (extraOptions.indexAxis === 'y');
-            const scaleConfig = extraOptions.scales || {
-                x: { display: !isHorizontal, grid: { display:false } },
-                y: { display: isHorizontal, grid: { display:false } }
-            };
-            const scales = (type==='doughnut') ? {} : scaleConfig;
+    // Merge scales correctly
+    const defaultScales = (type === 'doughnut') ? {} : {
+        x: { display: extraOptions.indexAxis !== 'y', grid: { display:false } },
+        y: { display: extraOptions.indexAxis === 'y', grid: { display:false } }
+    };
+    
+    // Use user provided scales if they exist, otherwise defaults
+    const scales = extraOptions.scales || defaultScales;
 
-            const pluginConfig = {
-                legend:{display:type!=='bar' && type!=='doughnut'},
-                datalabels:{
+    charts[id] = new Chart(ctx, {
+        type: type, 
+        data: data, 
+        plugins: [ChartDataLabels],
+        options: {
+            ...extraOptions, 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            maxBarThickness: 40,
+            
+            // STRICTER INTERACTION MODE (Fixes selection issue)
+            interaction: { 
+                mode: 'nearest', 
+                axis: extraOptions.indexAxis === 'y' ? 'y' : 'x', 
+                intersect: true 
+            },
+
+            plugins: {
+                legend: { display: type !== 'bar' && type !== 'doughnut' },
+                datalabels: {
                     color: document.body.classList.contains('dark-mode') ? '#fff' : '#333',
-                    font:{weight:'bold',size:10},
-                    display:(ctx)=>ctx.dataset.data[ctx.dataIndex]>0,
-                    align: type==='line'?'top':'center',
-                    formatter:(v)=>v
+                    font: { weight: 'bold', size: 10 },
+                    display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0,
+                    align: type === 'line' ? 'top' : 'center',
+                    formatter: (v) => v
                 },
                 ...(extraOptions.plugins || {})
-            };
-
-            charts[id]=new Chart(ctx, {
-                type: type, data: data, plugins: [ChartDataLabels],
-                options: {
-                    ...extraOptions, responsive:true, maintainAspectRatio:false, maxBarThickness: 40,
-                    plugins: pluginConfig, scales: scales, interaction: { mode: 'index', intersect: false },
-                    onClick:(e,el)=>{
-                        if(el.length&&filterKey){
-                            const idx=el[0].index;
-                            const val = (id === 'cTopEquip') ? data.datasets[0].data[idx] : data.labels[idx];
-                            toggleFilter(filterKey, data.labels[idx]); 
-                        }
-                    },
-                    onHover:(e,el)=>{e.native.target.style.cursor=el[0]?'pointer':'default';}
+            },
+            scales: scales,
+            
+            onClick: (e, el) => {
+                if (el.length && filterKey) {
+                    const idx = el[0].index;
+                    // Since we passed full labels to data, data.labels[idx] is now the correct full name
+                    toggleFilter(filterKey, data.labels[idx]); 
                 }
-            });
+            },
+            onHover: (e, el) => {
+                e.native.target.style.cursor = el[0] ? 'pointer' : 'default';
+            }
         }
+    });
+}
 
         function renderWidgets(){
             const faults={};
