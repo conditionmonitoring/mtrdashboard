@@ -179,7 +179,7 @@
         .view-section.active-view { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- DASHBOARD GRID SYSTEM (UPDATED LAYOUT) --- */
+        /* --- DASHBOARD GRID SYSTEM --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 0 20px 40px 20px; }
         .d-card { background: var(--bg-card); border-radius: 8px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-top: 3px solid var(--accent-teal); display: flex; flex-direction: column; min-width: 0; width: 100%; height: 100%; }
         .card-head { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; display:flex; justify-content:space-between; }
@@ -188,29 +188,27 @@
         .cb-standard { height: 250px; } .cb-tall { height: 450px; } 
 
         /* --- ROW 2 --- */
-        .a-dept { grid-column: span 2; }
-        .a-cat { grid-column: span 1; }
-        .a-equip { grid-column: span 1; }
-
+        .a-dept { grid-column: span 2; } 
+        .a-cat { grid-column: span 1; } 
+        .a-equip { grid-column: span 1; } 
+        
         /* --- ROW 3 --- */
-        .a-crit { grid-column: span 1; }
+        .a-crit { grid-column: span 1; } 
         .a-age { grid-column: span 1; }
-        .a-act-taken { grid-column: span 1; }
-        /* Bad Actors: Spans 1 column, 2 rows */
-        .a-top-equip { grid-column: span 1; grid-row: span 2; }
+        .a-act-taken { grid-column: span 1; } 
+        .a-top-equip { grid-column: span 1; grid-row: span 2; } 
 
         /* --- ROW 4 --- */
         .a-fault { grid-column: span 1; }
         .a-closed-under { grid-column: span 1; }
         .a-top-area { grid-column: span 1; }
 
-        /* --- ROW 5 (Split 50/50) --- */
+        /* --- ROW 5 --- */
         .a-trend { grid-column: span 2; } 
-        .a-saved { grid-column: span 2; } /* New Chart */
+        .a-saved { grid-column: span 2; } 
         
         /* --- ROW 6 --- */
         .a-list { grid-column: span 4; height: 300px; overflow: hidden; } 
-
 
         .fault-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; height: 200px; overflow-y: auto; }
         .fault-pill { background: var(--bg-body); border: 1px solid var(--border-color); padding: 6px; border-radius: 4px; display: flex; justify-content: space-between; font-size: 0.8rem; cursor: pointer; color: var(--text-main); }
@@ -396,7 +394,7 @@
                     <div class="card-head">Action Taken (Open)</div>
                     <div class="chart-box cb-standard">
                         <canvas id="cDoughnut"></canvas>
-                        <div class="donut-center"><div class="dc-val" id="valActTaken">0</div></div>
+                        <div class="donut-center" style="pointer-events:auto;"><div class="dc-val" id="valActTaken">0</div></div>
                     </div>
                 </div>
                 
@@ -410,7 +408,7 @@
                     <div class="fault-grid" id="faultList"></div>
                 </div>
                 <div class="d-card a-closed-under" style="border-top-color: var(--accent-green);">
-                    <div class="card-head">Diagnostic Accuracy</div>
+                    <div class="card-head">Diagnosis Accuracy</div>
                     <div class="chart-box cb-standard">
                         <canvas id="cClosedUnder"></canvas>
                         <div class="donut-center"><div class="dc-val" id="valClosedUnder">0</div></div>
@@ -710,31 +708,49 @@
             const actionTakenNames = actionTakenRows.map(r => r['Equipment Name'] || 'Unknown');
             
             document.getElementById('valActTaken').innerText=taken;
+
+            // -- ACTION TAKEN CHART WITH HOVER EFFECT --
+            // Get center text element for hover
+            const centerEl = document.getElementById('valActTaken');
+            const centerDiv = centerEl.parentElement; 
             
+            // Helpers to switch text
+            const showNames = () => {
+                if(actionTakenNames.length > 0) {
+                    if(actionTakenNames.length > 2) {
+                        centerEl.style.fontSize = '0.75rem';
+                        centerEl.style.lineHeight = '1.2';
+                        centerEl.innerText = actionTakenNames.slice(0, 2).join('\n') + `\n(+${actionTakenNames.length - 2})`;
+                    } else {
+                        centerEl.style.fontSize = '0.8rem';
+                        centerEl.style.lineHeight = '1.2';
+                        centerEl.innerText = actionTakenNames.join('\n');
+                    }
+                }
+            };
+            const showCount = () => {
+                centerEl.style.fontSize = '1.5rem';
+                centerEl.style.lineHeight = '1';
+                centerEl.innerText = taken;
+            };
+            
+            // Mouse events on the center div itself
+            centerDiv.onmouseenter = showNames;
+            centerDiv.onmouseleave = showCount;
+
             drawChart('cDoughnut', 'doughnut', {
                 labels:['Action Taken (Open Report)','Other'],
                 datasets:[{data:[taken, data.length-taken],backgroundColor:['#0d9488', isDark ? '#334155' : '#e2e8f0'],borderWidth:0,cutout:'75%'}]
             }, null, {
                 onHover: (e, elements) => {
-                    const centerEl = document.getElementById('valActTaken');
-                    if (elements && elements.length > 0) {
-                        const index = elements[0].index;
-                        if (index === 0 && actionTakenNames.length > 0) {
-                             // Show names on hover (Max 2)
-                            if(actionTakenNames.length > 2) {
-                                centerEl.style.fontSize = '0.8rem';
-                                centerEl.innerText = actionTakenNames.slice(0, 2).join(',\n') + `\n+${actionTakenNames.length - 2} more`;
-                            } else {
-                                centerEl.style.fontSize = '0.8rem';
-                                centerEl.innerText = actionTakenNames.join(',\n');
-                            }
-                        } else {
-                             centerEl.style.fontSize = '1.5rem';
-                             centerEl.innerText = taken;
-                        }
+                    // If hovering the "Action Taken" slice (index 0)
+                    if (elements && elements.length > 0 && elements[0].index === 0) {
+                        showNames();
                     } else {
-                        centerEl.style.fontSize = '1.5rem';
-                        centerEl.innerText = taken;
+                        // Only reset if not hovering the center div
+                        if(!centerDiv.matches(':hover')) {
+                            showCount();
+                        }
                     }
                 }
             });
@@ -761,7 +777,7 @@
                 ]
             }, null, { plugins: { legend: { display: true, position: 'bottom' } } });
 
-            // Top 10 Bad Actors
+            // Top 10 Bad Actors (NO GRID)
             const eqCounts = {};
             data.filter(r => r._drs !== 'Completed').forEach(r => {
                 const n = r['Equipment Name']; if(n) eqCounts[n] = (eqCounts[n] || 0) + 1;
@@ -782,10 +798,10 @@
                 indexAxis: 'y', 
                 layout: { padding: { left: 0 } },
                 scales: { 
-                    x: { display: false, grid: { display: false } }, 
+                    x: { display: false, grid: { display: false } }, // Grid Removed
                     y: { 
                         display: true, 
-                        grid: { display: false },
+                        grid: { display: false }, // Grid Removed
                         ticks: { 
                             autoSkip: false, 
                             font: { size: 11 }, 
@@ -802,7 +818,7 @@
                 } 
             });
 
-            // Top 5 Abnormal Areas
+            // Top 5 Abnormal Areas (NO GRID)
             const areaCounts = {};
             data.forEach(r => {
                 const area = r.Area ? r.Area.trim() : 'Unknown';
@@ -827,10 +843,10 @@
                 indexAxis: 'y',
                 layout: { padding: { left: 0 } },
                 scales: { 
-                    x: { display: false, grid: { display: false } }, 
+                    x: { display: false, grid: { display: false } }, // Grid Removed
                     y: { 
                         display: true, 
-                        grid: { display: false },
+                        grid: { display: false }, // Grid Removed
                         ticks: { 
                             autoSkip: false, 
                             font: { size: 11 }, 
@@ -893,12 +909,8 @@
         function renderSavedChart() {
             const selectedFY = document.getElementById('optFY').value;
             
-            // Filter data by the selected FY (using filteredData so it respects global filters too)
-            // Or if you want it independent of other filters, use rawData. Usually filteredData is better UX.
             const fyData = filteredData.filter(r => r._fy === selectedFY && r._saved > 0);
             
-            // Group by Month (Apr to Mar order)
-            // Map month index (0-11) to our logic: 3=Apr -> 0, 4=May -> 1 ... 2=Mar -> 11
             const monthOrder = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
             const savedByMonth = new Array(12).fill(0);
             let totalSaved = 0;
@@ -907,8 +919,6 @@
                 if(r._dateObj) {
                     let mIndex = r._dateObj.getMonth(); // 0=Jan
                     // Shift index so Apr=0, Mar=11
-                    // Jan(0) -> 9, Feb(1) -> 10, Mar(2) -> 11
-                    // Apr(3) -> 0 ... Dec(11) -> 8
                     let sortIndex = (mIndex >= 3) ? mIndex - 3 : mIndex + 9;
                     
                     savedByMonth[sortIndex] += r._saved;
@@ -921,7 +931,6 @@
             const ctx = document.getElementById('cSaved').getContext('2d');
             if(savedChartInstance) savedChartInstance.destroy();
 
-            // Determine colors
             const isDark = document.body.classList.contains('dark-mode');
             const txtColor = isDark ? '#cbd5e1' : '#475569';
             const gridColor = isDark ? '#334155' : '#e2e8f0';
@@ -954,11 +963,11 @@
                     scales: {
                         y: { 
                             beginAtZero: true, 
-                            grid: { display: false }, // No grid on Y
+                            grid: { display: false }, // NO GRID (Saved Chart)
                             ticks: { color: txtColor }
                         },
                         x: { 
-                            grid: { display: false }, // No grid on X
+                            grid: { display: false }, // NO GRID (Saved Chart)
                             ticks: { color: txtColor }
                         }
                     }
