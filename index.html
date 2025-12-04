@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,6 +30,7 @@
             --accent-green: #22c55e;
             --accent-blue: #3b82f6;
             --accent-yellow: #f59e0b;
+            --accent-purple: #8b5cf6;
             
             /* KPI Colors */
             --c-generated: #64748b;
@@ -67,50 +67,31 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* --- PRINT MODE (Always Forces Light Theme Layout) --- */
+        /* --- PRINT MODE --- */
         body.print-mode {
             background: white !important; color: black !important;
             height: auto !important; overflow: visible !important;
             -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
         }
-        /* Hide UI in Print */
         body.print-mode .sidebar, body.print-mode .top-bar, body.print-mode .tl-controls { display: none !important; }
-        
-        /* Print Layout Fixes */
         body.print-mode .main { width: 1200px !important; margin: 0 auto; padding: 0; overflow: visible; height: auto; }
+        
         body.print-mode .dashboard-grid { 
             display: grid !important; grid-template-columns: repeat(3, 1fr) !important; 
             gap: 10px !important; padding: 0 20px !important; 
         }
         
-        /* Override Colors for Print (Ensure readability on paper) */
-        body.print-mode .d-card, body.print-mode .kpi-card, body.print-mode .tl-content { 
-            background: white !important; 
-            border: 1px solid #ccc !important; 
-            color: black !important;
-            box-shadow: none !important;
+        body.print-mode .d-card, body.print-mode .kpi-card { 
+            background: white !important; border: 1px solid #ccc !important; 
+            color: black !important; box-shadow: none !important;
         }
-        body.print-mode .card-head, body.print-mode .kpi-title, body.print-mode .tl-date { color: #333 !important; }
+        body.print-mode .card-head, body.print-mode .kpi-title { color: #333 !important; }
 
-        /* Print Grid Map */
-        body.print-mode .a-dept { grid-column: span 1 !important; }
-        body.print-mode .a-cat { grid-column: span 1 !important; }
-        body.print-mode .a-crit { grid-column: span 1 !important; }
-        body.print-mode .a-equip { grid-column: span 1 !important; }
-        body.print-mode .a-act-taken { grid-column: span 1 !important; }
-        body.print-mode .a-age { grid-column: span 1 !important; }
-        body.print-mode .a-top-equip { grid-column: span 1 !important; grid-row: span 1 !important; } 
-        body.print-mode .a-fault { grid-column: span 1 !important; }
-        body.print-mode .a-trend { grid-column: span 2 !important; }
-        body.print-mode .a-list { grid-column: span 3 !important; } 
-
-        body.print-mode .chart-box { height: 180px !important; }
-        body.print-mode .cb-tall { height: 180px !important; } 
-        
-        /* Timeline Print */
-        body.print-mode .timeline-wrapper { padding: 20px; width: 100%; }
-        body.print-mode .timeline-container { max-width: 100%; }
-        body.print-mode .tl-item { break-inside: avoid; }
+        /* Print Layout Reset */
+        body.print-mode .a-dept, body.print-mode .a-trend, body.print-mode .a-list, body.print-mode .a-saved { grid-column: span 3 !important; }
+        body.print-mode .a-top-equip { grid-row: span 1 !important; }
+        body.print-mode .chart-box { height: 200px !important; }
+        body.print-mode .cb-tall { height: 200px !important; }
 
         /* --- UI STYLES --- */
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; opacity: 0; transition: opacity 0.3s; }
@@ -140,7 +121,6 @@
         .footer-credits { text-align: center; color: #64748b; font-size: 0.65rem; margin-top: 15px; line-height: 1.5; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 10px; }
         .dev-name { color: var(--accent-teal); font-weight: 600; }
 
-        /* Filters */
         .filter-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; transition: all 0.2s; position: relative; overflow: hidden; }
         .filter-card:hover { background: rgba(255,255,255,0.06); }
         .unit-card.active { border-color: var(--accent-blue); background: rgba(59, 130, 246, 0.15); }
@@ -173,7 +153,6 @@
         .kpi-row { flex-grow: 1; display: flex; gap: 15px; flex-wrap: wrap; }
         .kpi-card { flex: 1 1 160px; background: var(--bg-card); border-radius: 12px; padding: 15px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; border-top: 4px solid #cbd5e1; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; min-width: 140px; border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; }
         
-        /* Active KPI States - Dynamic Border & Tint */
         .kpi-card.active.k-gen { background-color: rgba(100, 116, 139, 0.1); border-color: var(--c-generated); }
         .kpi-card.active.k-comp { background-color: rgba(22, 163, 74, 0.1); border-color: var(--c-completed); }
         .kpi-card.active.k-open { background-color: rgba(245, 158, 11, 0.1); border-color: var(--c-open); }
@@ -200,7 +179,7 @@
         .view-section.active-view { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* DASHBOARD GRID */
+        /* --- DASHBOARD GRID SYSTEM (UPDATED LAYOUT) --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 0 20px 40px 20px; }
         .d-card { background: var(--bg-card); border-radius: 8px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-top: 3px solid var(--accent-teal); display: flex; flex-direction: column; min-width: 0; width: 100%; height: 100%; }
         .card-head { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; display:flex; justify-content:space-between; }
@@ -208,20 +187,30 @@
         canvas { width: 100% !important; height: 100% !important; }
         .cb-standard { height: 250px; } .cb-tall { height: 450px; } 
 
-        /* LAYOUT RE-STRUCTURE */
-        .a-dept { grid-column: span 2; } 
-        .a-cat { grid-column: span 1; } 
-        .a-equip { grid-column: span 1; } 
-        
-        .a-crit { grid-column: span 1; } 
-        .a-age { grid-column: span 1; }
-        .a-act-taken { grid-column: span 1; } 
-        .a-top-equip { grid-column: span 1; grid-row: span 2; } 
+        /* --- ROW 2 --- */
+        .a-dept { grid-column: span 2; }
+        .a-cat { grid-column: span 1; }
+        .a-equip { grid-column: span 1; }
 
+        /* --- ROW 3 --- */
+        .a-crit { grid-column: span 1; }
+        .a-age { grid-column: span 1; }
+        .a-act-taken { grid-column: span 1; }
+        /* Bad Actors: Spans 1 column, 2 rows */
+        .a-top-equip { grid-column: span 1; grid-row: span 2; }
+
+        /* --- ROW 4 --- */
         .a-fault { grid-column: span 1; }
+        .a-closed-under { grid-column: span 1; }
+        .a-top-area { grid-column: span 1; }
+
+        /* --- ROW 5 (Split 50/50) --- */
         .a-trend { grid-column: span 2; } 
+        .a-saved { grid-column: span 2; } /* New Chart */
         
+        /* --- ROW 6 --- */
         .a-list { grid-column: span 4; height: 300px; overflow: hidden; } 
+
 
         .fault-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; height: 200px; overflow-y: auto; }
         .fault-pill { background: var(--bg-body); border: 1px solid var(--border-color); padding: 6px; border-radius: 4px; display: flex; justify-content: space-between; font-size: 0.8rem; cursor: pointer; color: var(--text-main); }
@@ -239,12 +228,9 @@
         .timeline-container { position: relative; max-width: 900px; margin: 0 auto; }
         .timeline-container::after { content: ''; position: absolute; width: 4px; background-color: var(--border-color); top: 0; bottom: 0; left: 24px; margin-left: -2px; }
         .tl-item { padding: 10px 40px 10px 60px; position: relative; background-color: inherit; width: 100%; }
-        
-        /* Fixed Dot Logic */
         .tl-dot { position: absolute; width: 20px; height: 20px; left: 16px; background-color: var(--bg-card); border: 4px solid var(--accent-teal); top: 15px; border-radius: 50%; z-index: 1; display:block; }
         .tl-item.critical .tl-dot { border-color: var(--accent-red); }
         .tl-item.marginal .tl-dot { border-color: var(--accent-yellow); }
-        
         .tl-content { padding: 15px; background-color: var(--bg-card); position: relative; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--accent-teal); }
         .tl-item.critical .tl-content { border-left-color: var(--accent-red); }
         .tl-item.marginal .tl-content { border-left-color: var(--accent-yellow); }
@@ -262,9 +248,8 @@
         
         @media (max-width: 1200px) {
             .dashboard-grid { grid-template-columns: 1fr 1fr; }
-            .a-dept { grid-column: span 1; } .a-cat { grid-column: span 1; } .a-crit { grid-column: span 1; } .a-equip { grid-column: span 1; } 
-            .a-act-taken { grid-column: span 1; } .a-age { grid-column: span 1; } .a-top-equip { grid-column: span 1; grid-row: auto; } 
-            .a-fault { grid-column: span 1; } .a-trend { grid-column: span 2; } .a-list { grid-column: span 2; }
+            .a-dept, .a-trend, .a-list, .a-saved { grid-column: span 2; }
+            .a-top-equip { grid-row: auto; }
             .issuer-card { width: 100%; flex: auto; flex-direction: row; align-items: center; gap: 20px; justify-content: space-between; }
             .issuer-header { border-bottom: none; margin-bottom: 0; padding-bottom: 0; border-right: 1px solid #eee; padding-right: 20px; }
         }
@@ -272,7 +257,7 @@
             .filters-active { margin-left: 10px; max-width: 50vw; }
             .sidebar { position: fixed; left: -270px; } .sidebar.mobile-active { left: 0; }
             .dashboard-grid { grid-template-columns: 1fr; } 
-            .a-dept, .a-cat, .a-act-taken, .a-equip, .a-crit, .a-age, .a-fault, .a-list, .a-top-equip, .a-trend { grid-column: span 1; }
+            .a-dept, .a-cat, .a-act-taken, .a-equip, .a-crit, .a-age, .a-fault, .a-list, .a-top-equip, .a-top-area, .a-trend, .a-closed-under, .a-saved { grid-column: span 1; grid-row: auto; }
             .cb-tall { height: 280px; } .top-stats-container { padding: 10px; } .dashboard-grid { padding: 0 10px 20px 10px; }
             .last-update { display: none; } .page-header-title { font-size: 1rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
             .tl-controls { flex-direction: column; } .timeline-container::after { left: 20px; } .tl-item { padding-left: 45px; padding-right: 10px; } .tl-dot { left: 11px; }
@@ -385,6 +370,7 @@
 
         <div id="view-dashboard" class="view-section active-view">
             <div class="dashboard-grid">
+                
                 <div class="d-card a-dept">
                     <div class="card-head">Department Wise <small>(Click to filter)</small></div>
                     <div class="chart-box cb-tall"><canvas id="cDept"></canvas></div>
@@ -413,6 +399,7 @@
                         <div class="donut-center"><div class="dc-val" id="valActTaken">0</div></div>
                     </div>
                 </div>
+                
                 <div class="d-card a-top-equip" style="border-top-color: var(--accent-red);">
                     <div class="card-head">Top 10 Bad Actors</div>
                     <div class="chart-box cb-tall"><canvas id="cTopEquip"></canvas></div>
@@ -422,9 +409,32 @@
                     <div class="card-head">Fault Type</div>
                     <div class="fault-grid" id="faultList"></div>
                 </div>
+                <div class="d-card a-closed-under" style="border-top-color: var(--accent-green);">
+                    <div class="card-head">Diagnostic Accuracy</div>
+                    <div class="chart-box cb-standard">
+                        <canvas id="cClosedUnder"></canvas>
+                        <div class="donut-center"><div class="dc-val" id="valClosedUnder">0</div></div>
+                    </div>
+                </div>
+                <div class="d-card a-top-area" style="border-top-color: var(--accent-yellow);">
+                    <div class="card-head">Top 5 Abnormal Areas</div>
+                    <div class="chart-box cb-standard"><canvas id="cTopArea"></canvas></div>
+                </div>
+
                 <div class="d-card a-trend">
                     <div class="card-head">Input vs Closed (Last 7 Days)</div>
                     <div class="chart-box cb-standard"><canvas id="cTrend"></canvas></div>
+                </div>
+                <div class="d-card a-saved" style="border-top-color: var(--accent-purple);">
+                    <div class="card-head" style="justify-content:space-between; align-items:center;">
+                        <span>Downtime Saved</span>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <select id="optFY" style="padding:2px 4px; font-size:0.8rem; border:1px solid var(--border-color); border-radius:4px; background:var(--bg-body); color:var(--text-main);" onchange="renderSavedChart()">
+                                </select>
+                            <span id="valTotalSaved" style="font-weight:800; color:var(--accent-purple); font-size:0.9rem;">0h</span>
+                        </div>
+                    </div>
+                    <div class="chart-box cb-standard"><canvas id="cSaved"></canvas></div>
                 </div>
 
                 <div class="d-card a-list">
@@ -463,6 +473,7 @@
         let rawData=[], filteredData=[], activeKPI='Generated', filters={}; 
         let manualZoneMap=JSON.parse(localStorage.getItem('mtr_manual_map'))||{};
         let currentView = 'dashboard';
+        let savedChartInstance = null;
         
         Chart.register(ChartDataLabels);
 
@@ -471,7 +482,6 @@
         let charts={};
 
         window.addEventListener('load', () => {
-            // Check Theme
             if(localStorage.getItem('mtr_theme') === 'dark') {
                 document.body.classList.add('dark-mode');
                 document.querySelector('.theme-btn i').className = 'fas fa-sun';
@@ -525,19 +535,25 @@
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('mtr_theme', isDark ? 'dark' : 'light');
             document.querySelector('.theme-btn i').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-            renderDashboard(); // Re-render charts to update text color
+            renderDashboard(); 
         }
 
         function processData(){
             const today=new Date();
             let maxDate = null; 
             rawData.forEach(r=>{
-                r._dateObj=null; r._daysOld=0;
+                r._dateObj=null; r._daysOld=0; r._fy = '';
                 if(r.Date && r.Date.split('-').length===3){
                     const p=r.Date.split('-');
                     r._dateObj=new Date(p[2],p[1]-1,p[0]);
                     r._daysOld=Math.ceil(Math.abs(today-r._dateObj)/(1000*60*60*24));
                     if(!maxDate || r._dateObj > maxDate) maxDate = r._dateObj;
+                    
+                    // Calculate Financial Year (Apr-Mar)
+                    const month = r._dateObj.getMonth();
+                    const year = r._dateObj.getFullYear();
+                    const fyYear = (month >= 3) ? year + 1 : year;
+                    r._fy = 'FY' + String(fyYear).slice(-2);
                 }
                 r._closedDateObj=null;
                 if(r['Action Taken Date'] && r['Action Taken Date'].split('-').length===3) {
@@ -546,6 +562,9 @@
                 }
                 r._drs=(r['DRS Status']||'').trim();
                 r._act=(r['Action Status']||'').trim();
+                r['Closed Under'] = (r['Closed Under']||'').trim();
+                r._saved = parseFloat(r['Hours Saved']) || 0; 
+
                 r._zone = (r['ZONE'] && r['ZONE'].trim()) ? r['ZONE'].trim().toUpperCase() : (manualZoneMap[r.Plant] || 'OTHER');
                 r._unit = (r['Org. Unit'] || 'Unknown').trim();
             });
@@ -554,6 +573,29 @@
                 document.getElementById('lastUpdateDate').innerText = dateStr;
                 document.getElementById('lastUpdateContainer').style.display = 'flex';
             }
+            populateFYDropdown();
+        }
+        
+        function populateFYDropdown() {
+            // Find all unique FYs that have saved hours
+            const fys = new Set();
+            rawData.forEach(r => {
+                if(r._saved > 0 && r._fy) fys.add(r._fy);
+            });
+            const sortedFYs = Array.from(fys).sort().reverse(); // Newest first
+            
+            const sel = document.getElementById('optFY');
+            sel.innerHTML = '';
+            if(sortedFYs.length === 0) {
+                sel.innerHTML = '<option value="">No Data</option>';
+                return;
+            }
+            
+            sortedFYs.forEach(fy => {
+                sel.innerHTML += `<option value="${fy}">${fy}</option>`;
+            });
+            // Default to first (newest)
+            sel.value = sortedFYs[0];
         }
 
         function setKPI(k){ activeKPI=k; document.querySelectorAll('.kpi-card').forEach(c=>c.classList.remove('active')); document.getElementById(`card-${k}`).classList.add('active'); applyFilters(); }
@@ -578,6 +620,13 @@
                     else if(k==='Zone'){if(r._zone!==v)return false;}
                     else if(k==='Unit'){if(r._unit!==v)return false;}
                     else if(k==='Fault'){ if(!r['Issue On Short']||!r['Issue On Short'].includes(v))return false; }
+                    else if(k==='AreaComposite') {
+                        const separatorIndex = v.indexOf(' - ');
+                        if (separatorIndex === -1) return false;
+                        const p = v.substring(0, separatorIndex);
+                        const a = v.substring(separatorIndex + 3);
+                        if (r.Plant !== p || r.Area !== a) return false;
+                    }
                     else{if(r[k]!==undefined && r[k]!==v)return false;}
                 }
                 return true;
@@ -594,6 +643,13 @@
                     else if(k==='Zone'){if(r._zone!==v)return false;}
                     else if(k==='Unit'){if(r._unit!==v)return false;}
                     else if(k==='Fault'){ if(!r['Issue On Short']||!r['Issue On Short'].includes(v))return false; }
+                    else if(k==='AreaComposite') {
+                        const separatorIndex = v.indexOf(' - ');
+                        if (separatorIndex === -1) return false;
+                        const p = v.substring(0, separatorIndex);
+                        const a = v.substring(separatorIndex + 3);
+                        if (r.Plant !== p || r.Area !== a) return false;
+                    }
                     else{if(r[k]!==undefined && r[k]!==v)return false;}
                 }
                 return true;
@@ -611,11 +667,8 @@
             const data=filteredData;
             const agg=(k)=>{const m={};data.forEach(r=>{const v=r[k]||'N/A';m[v]=(m[v]||0)+1});return m;};
             
-            // Determine Text Color based on Theme
             const isDark = document.body.classList.contains('dark-mode');
             const txtColor = isDark ? '#cbd5e1' : '#475569';
-
-            // Charts Defaults
             Chart.defaults.color = txtColor;
             Chart.defaults.borderColor = isDark ? '#334155' : '#e2e8f0';
 
@@ -623,18 +676,18 @@
             drawChart('cDept', 'bar', {
                 labels:plants,
                 datasets:[
-                    {label:'Critical',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),backgroundColor:'#dc2626',stack:'0'},
-                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:'#f59e0b',stack:'0'}
+                    {label:'Critical',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),backgroundColor:'#dc2626',stack:'0', borderRadius: 4},
+                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:'#f59e0b',stack:'0', borderRadius: 4}
                 ]
             }, 'Plant');
 
             const cats=agg('Category');
-            drawChart('cCat', 'bar', {labels:Object.keys(cats),datasets:[{data:Object.values(cats),backgroundColor:'#0d9488',label:'Count'}]}, 'Category');
+            drawChart('cCat', 'bar', {labels:Object.keys(cats),datasets:[{data:Object.values(cats),backgroundColor:'#0d9488',label:'Count', borderRadius: 4}]}, 'Category');
 
             const equips=agg('Type');
             drawChart('cEquip', 'bar', {
                 labels:Object.keys(equips),
-                datasets:[{data:Object.values(equips),backgroundColor:'#475569',label:'Count',indexAxis: 'y'}]
+                datasets:[{data:Object.values(equips),backgroundColor:'#475569',label:'Count',indexAxis: 'y', borderRadius: 4}]
             }, 'Type', { indexAxis: 'y' }); 
 
             const crits = agg('Criticality');
@@ -651,13 +704,42 @@
                 datasets: [{ data: critValues, backgroundColor: critColors }]
             }, 'Criticality');
 
-            const taken=window.actTakenCount; 
+            // Action Taken - Calc Names
+            const actionTakenRows = data.filter(r=>(r._drs.includes('Pending')||r._drs.includes('Planned'))&&r._act==='Completed');
+            const taken = actionTakenRows.length;
+            const actionTakenNames = actionTakenRows.map(r => r['Equipment Name'] || 'Unknown');
+            
             document.getElementById('valActTaken').innerText=taken;
+            
             drawChart('cDoughnut', 'doughnut', {
                 labels:['Action Taken (Open Report)','Other'],
                 datasets:[{data:[taken, data.length-taken],backgroundColor:['#0d9488', isDark ? '#334155' : '#e2e8f0'],borderWidth:0,cutout:'75%'}]
+            }, null, {
+                onHover: (e, elements) => {
+                    const centerEl = document.getElementById('valActTaken');
+                    if (elements && elements.length > 0) {
+                        const index = elements[0].index;
+                        if (index === 0 && actionTakenNames.length > 0) {
+                             // Show names on hover (Max 2)
+                            if(actionTakenNames.length > 2) {
+                                centerEl.style.fontSize = '0.8rem';
+                                centerEl.innerText = actionTakenNames.slice(0, 2).join(',\n') + `\n+${actionTakenNames.length - 2} more`;
+                            } else {
+                                centerEl.style.fontSize = '0.8rem';
+                                centerEl.innerText = actionTakenNames.join(',\n');
+                            }
+                        } else {
+                             centerEl.style.fontSize = '1.5rem';
+                             centerEl.innerText = taken;
+                        }
+                    } else {
+                        centerEl.style.fontSize = '1.5rem';
+                        centerEl.innerText = taken;
+                    }
+                }
             });
 
+            // Trend Chart
             const dateSet = new Set();
             const genMap = {};
             const closedMap = {};
@@ -679,107 +761,269 @@
                 ]
             }, null, { plugins: { legend: { display: true, position: 'bottom' } } });
 
+            // Top 10 Bad Actors
             const eqCounts = {};
             data.filter(r => r._drs !== 'Completed').forEach(r => {
                 const n = r['Equipment Name']; if(n) eqCounts[n] = (eqCounts[n] || 0) + 1;
             });
             const top10 = Object.entries(eqCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
+            const fullNames = top10.map(i => i[0]); 
+            
+            drawChart('cTopEquip', 'bar', {
+                labels: fullNames, 
+                datasets: [{
+                    label: 'Open Faults', 
+                    data: top10.map(i => i[1]), 
+                    backgroundColor: '#ef4444', 
+                    indexAxis: 'y',
+                    borderRadius: 4
+                }]
+            }, 'Equipment Name', { 
+                indexAxis: 'y', 
+                layout: { padding: { left: 0 } },
+                scales: { 
+                    x: { display: false, grid: { display: false } }, 
+                    y: { 
+                        display: true, 
+                        grid: { display: false },
+                        ticks: { 
+                            autoSkip: false, 
+                            font: { size: 11 }, 
+                            crossAlign: 'near',
+                            callback: function(value) {
+                                const label = this.getLabelForValue(value);
+                                if (typeof label === 'string' && label.length > 25) {
+                                    return label.substring(0, 15) + '...' + label.substring(label.length - 5);
+                                }
+                                return label;
+                            }
+                        } 
+                    } 
+                } 
+            });
 
-// 1. Create a separate array for FULL names
-const fullNames = top10.map(i => i[0]); 
+            // Top 5 Abnormal Areas
+            const areaCounts = {};
+            data.forEach(r => {
+                const area = r.Area ? r.Area.trim() : 'Unknown';
+                const plant = r.Plant ? r.Plant.trim() : 'Unknown';
+                const key = `${plant} - ${area}`;
+                areaCounts[key] = (areaCounts[key] || 0) + 1;
+            });
+            const top5Areas = Object.entries(areaCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const areaLabels = top5Areas.map(i => i[0]); 
+            const areaData = top5Areas.map(i => i[1]);
 
-const labels = top10.map(i => i[0]); 
-
-drawChart('cTopEquip', 'bar', {
-    labels: labels, // Pass FULL names here
-    datasets: [{
-        label: 'Open Faults', 
-        data: top10.map(i => i[1]), 
-        backgroundColor: '#ef4444', 
-        indexAxis: 'y'
-    }]
-}, 'Equipment Name', { 
-    indexAxis: 'y', 
-    layout: { padding: { left: 0 } },
-    // We will handle truncation inside the scale options now
-    scales: { 
-        x: { display: false }, 
-        y: { 
-            display: true, 
-            ticks: { 
-                autoSkip: false, 
-                font: { size: 11 }, 
-                crossAlign: 'near',
-                // ADD THIS CALLBACK FUNCTION:
-                callback: function(value) {
-                    const label = this.getLabelForValue(value);
-                    if (typeof label === 'string' && label.length > 25) {
-                        return label.substring(0, 15) + '...' + label.substring(label.length - 5);
-                    }
-                    return label;
+            drawChart('cTopArea', 'bar', {
+                labels: areaLabels,
+                datasets: [{
+                    label: 'Reports',
+                    data: areaData,
+                    backgroundColor: '#f59e0b', 
+                    indexAxis: 'y',
+                    borderRadius: 4
+                }]
+            }, 'AreaComposite', {
+                indexAxis: 'y',
+                layout: { padding: { left: 0 } },
+                scales: { 
+                    x: { display: false, grid: { display: false } }, 
+                    y: { 
+                        display: true, 
+                        grid: { display: false },
+                        ticks: { 
+                            autoSkip: false, 
+                            font: { size: 11 }, 
+                            crossAlign: 'near',
+                            callback: function(value) {
+                                const label = this.getLabelForValue(value);
+                                if (typeof label === 'string' && label.length > 25) {
+                                    return label.substring(0, 15) + '...' + label.substring(label.length - 5);
+                                }
+                                return label;
+                            }
+                        } 
+                    } 
                 }
-            } 
-        } 
-    } 
-});
+            });
+
+            // Diagnosis Accuracy
+            const closedUnderCounts = { 'TP': 0, 'FP': 0, 'FN': 0 };
+            let totalClosedUnder = 0;
+            data.forEach(r => {
+                if (r['Closed Under']) {
+                    const status = r['Closed Under'].toUpperCase(); 
+                    if (closedUnderCounts[status] !== undefined) {
+                        closedUnderCounts[status]++;
+                        totalClosedUnder++;
+                    }
+                }
+            });
+            document.getElementById('valClosedUnder').innerText = totalClosedUnder;
+
+            drawChart('cClosedUnder', 'doughnut', {
+                labels: ['True Positive (TP)', 'False Positive (FP)', 'False Negative (FN)'],
+                datasets: [{
+                    data: [closedUnderCounts['TP'], closedUnderCounts['FP'], closedUnderCounts['FN']],
+                    backgroundColor: ['#16a34a', '#f59e0b', '#dc2626']
+                }]
+            }, 'Closed Under', { 
+                filterValues: ['TP', 'FP', 'FN'], 
+                plugins: {
+                    datalabels: {
+                        color: '#fff',
+                        font: { weight: 'bold' },
+                        formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => { sum += data; });
+                            if (sum === 0) return "";
+                            let percentage = (value * 100 / sum).toFixed(1) + "%";
+                            return value + '\n(' + percentage + ')';
+                        }
+                    }
+                }
+            });
+            
+            // Render Saved Chart separately
+            renderSavedChart();
         }
+
+        // New function to handle FY filtering logic for just the Saved Chart
+        function renderSavedChart() {
+            const selectedFY = document.getElementById('optFY').value;
+            
+            // Filter data by the selected FY (using filteredData so it respects global filters too)
+            // Or if you want it independent of other filters, use rawData. Usually filteredData is better UX.
+            const fyData = filteredData.filter(r => r._fy === selectedFY && r._saved > 0);
+            
+            // Group by Month (Apr to Mar order)
+            // Map month index (0-11) to our logic: 3=Apr -> 0, 4=May -> 1 ... 2=Mar -> 11
+            const monthOrder = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+            const savedByMonth = new Array(12).fill(0);
+            let totalSaved = 0;
+
+            fyData.forEach(r => {
+                if(r._dateObj) {
+                    let mIndex = r._dateObj.getMonth(); // 0=Jan
+                    // Shift index so Apr=0, Mar=11
+                    // Jan(0) -> 9, Feb(1) -> 10, Mar(2) -> 11
+                    // Apr(3) -> 0 ... Dec(11) -> 8
+                    let sortIndex = (mIndex >= 3) ? mIndex - 3 : mIndex + 9;
+                    
+                    savedByMonth[sortIndex] += r._saved;
+                    totalSaved += r._saved;
+                }
+            });
+            
+            document.getElementById('valTotalSaved').innerText = totalSaved + 'h';
+
+            const ctx = document.getElementById('cSaved').getContext('2d');
+            if(savedChartInstance) savedChartInstance.destroy();
+
+            // Determine colors
+            const isDark = document.body.classList.contains('dark-mode');
+            const txtColor = isDark ? '#cbd5e1' : '#475569';
+            const gridColor = isDark ? '#334155' : '#e2e8f0';
+
+            savedChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: monthOrder,
+                    datasets: [{
+                        label: 'Hours Saved',
+                        data: savedByMonth,
+                        backgroundColor: '#8b5cf6',
+                        borderRadius: 4
+                    }]
+                },
+                plugins: [ChartDataLabels],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            color: txtColor,
+                            anchor: 'end',
+                            align: 'top',
+                            font: { weight: 'bold' },
+                            formatter: (v) => v > 0 ? v : ''
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { display: false }, // No grid on Y
+                            ticks: { color: txtColor }
+                        },
+                        x: { 
+                            grid: { display: false }, // No grid on X
+                            ticks: { color: txtColor }
+                        }
+                    }
+                }
+            });
+        }
+
 
         function drawChart(id, type, data, filterKey, extraOptions={}){
-    const ctx = document.getElementById(id).getContext('2d');
-    if(charts[id]) charts[id].destroy();
+            const ctx = document.getElementById(id).getContext('2d');
+            if(charts[id]) charts[id].destroy();
 
-    // Merge scales correctly
-    const defaultScales = (type === 'doughnut') ? {} : {
-        x: { display: extraOptions.indexAxis !== 'y', grid: { display:false } },
-        y: { display: extraOptions.indexAxis === 'y', grid: { display:false } }
-    };
-    
-    // Use user provided scales if they exist, otherwise defaults
-    const scales = extraOptions.scales || defaultScales;
-
-    charts[id] = new Chart(ctx, {
-        type: type, 
-        data: data, 
-        plugins: [ChartDataLabels],
-        options: {
-            ...extraOptions, 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            maxBarThickness: 40,
+            const defaultScales = (type === 'doughnut') ? {} : {
+                x: { display: extraOptions.indexAxis !== 'y', grid: { display:false } },
+                y: { display: extraOptions.indexAxis === 'y', grid: { display:false } }
+            };
             
-            // STRICTER INTERACTION MODE (Fixes selection issue)
-            interaction: { 
-                mode: 'nearest', 
-                axis: extraOptions.indexAxis === 'y' ? 'y' : 'x', 
-                intersect: true 
-            },
+            const scales = extraOptions.scales || defaultScales;
 
-            plugins: {
-                legend: { display: type !== 'bar' && type !== 'doughnut' },
-                datalabels: {
-                    color: document.body.classList.contains('dark-mode') ? '#fff' : '#333',
-                    font: { weight: 'bold', size: 10 },
-                    display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0,
-                    align: type === 'line' ? 'top' : 'center',
-                    formatter: (v) => v
-                },
-                ...(extraOptions.plugins || {})
-            },
-            scales: scales,
-            
-            onClick: (e, el) => {
-                if (el.length && filterKey) {
-                    const idx = el[0].index;
-                    // Since we passed full labels to data, data.labels[idx] is now the correct full name
-                    toggleFilter(filterKey, data.labels[idx]); 
+            charts[id] = new Chart(ctx, {
+                type: type, 
+                data: data, 
+                plugins: [ChartDataLabels],
+                options: {
+                    ...extraOptions, 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    maxBarThickness: 40,
+                    
+                    interaction: { 
+                        mode: 'nearest', 
+                        axis: extraOptions.indexAxis === 'y' ? 'y' : 'x', 
+                        intersect: true 
+                    },
+
+                    plugins: {
+                        legend: { display: type !== 'bar' && type !== 'doughnut' },
+                        datalabels: {
+                            color: document.body.classList.contains('dark-mode') ? '#fff' : '#333',
+                            font: { weight: 'bold', size: 10 },
+                            display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0,
+                            align: type === 'line' ? 'top' : 'center',
+                            formatter: (v) => v
+                        },
+                        ...(extraOptions.plugins || {})
+                    },
+                    scales: scales,
+                    
+                    onClick: (e, el) => {
+                        if (el.length && filterKey) {
+                            const idx = el[0].index;
+                            const valueToFilter = (extraOptions.filterValues) 
+                                ? extraOptions.filterValues[idx] 
+                                : data.labels[idx];
+                            
+                            toggleFilter(filterKey, valueToFilter); 
+                        }
+                    },
+                    onHover: (e, el) => {
+                        e.native.target.style.cursor = el[0] ? 'pointer' : 'default';
+                        if(extraOptions.onHover) extraOptions.onHover(e, el);
+                    }
                 }
-            },
-            onHover: (e, el) => {
-                e.native.target.style.cursor = el[0] ? 'pointer' : 'default';
-            }
+            });
         }
-    });
-}
 
         function renderWidgets(){
             const faults={};
@@ -804,7 +1048,6 @@ drawChart('cTopEquip', 'bar', {
             });
             const tAge=document.getElementById('tAge'); tAge.innerHTML=`<tr><th>Group</th><th>Count</th></tr>`;
             const clr=['#dcfce7','#fef9c3','#ffedd5','#fee2e2'];
-            // Dark Mode Colors for Age Table
             const clrDark = ['#064e3b', '#713f12', '#7f1d1d', '#450a0a'];
             const isDark = document.body.classList.contains('dark-mode');
             const palette = isDark ? clrDark : clr;
