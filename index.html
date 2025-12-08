@@ -14,84 +14,68 @@
 
     <style>
         :root {
-            /* --- LIGHT THEME (Default) --- */
-            --bg-body: #f8fafc;
+            /* --- MODERN THEME PALETTE --- */
+            --bg-body: #f1f5f9; /* Softer gray/blue background */
             --bg-sidebar: #0f172a;
             --bg-card: #ffffff;
             --text-main: #334155;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --hover-bg: #f1f5f9;
             
-            /* Accents */
-            --accent-teal: #0d9488;
-            --accent-teal-dark: #0f766e;
-            --accent-red: #ef4444;
-            --accent-green: #22c55e;
-            --accent-blue: #3b82f6;
-            --accent-yellow: #f59e0b;
-            --accent-purple: #8b5cf6;
+            /* Modern Gradients (Used in CSS & JS) */
+            --grad-teal: linear-gradient(135deg, #2dd4bf 0%, #0d9488 100%);
+            --grad-red: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+            --grad-green: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
+            --grad-blue: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+            --grad-yellow: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            --grad-purple: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
             
-            /* KPI Colors */
-            --c-generated: #64748b;
-            --c-completed: #16a34a;
-            --c-open: #f59e0b;
-            --c-pending: #dc2626;
-            --c-planned: #2563eb;
+            /* Solid Colors for Text */
+            --c-teal: #0d9488;
+            --c-red: #dc2626;
+            --c-green: #16a34a;
+            --c-blue: #2563eb;
+            --c-yellow: #d97706;
+            --c-purple: #7c3aed;
         }
 
         /* --- DARK MODE OVERRIDES --- */
         body.dark-mode {
-            --bg-body: #0f172a; /* Deep Blue/Black */
-            --bg-sidebar: #020617; /* Almost Black */
-            --bg-card: #1e293b; /* Dark Slate */
-            --text-main: #f1f5f9; /* White/Light Gray */
-            --text-muted: #94a3b8; /* Muted Blue/Gray */
-            --border-color: #334155; /* Dark Border */
-            --hover-bg: #334155;
+            --bg-body: #020617; 
+            --bg-sidebar: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
-        /* Global Scrollbar Hide */
-        *::-webkit-scrollbar { display: none; }
-        * { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Custom Scrollbar for inner elements */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8); }
 
         body { 
             display: flex; 
             background-color: var(--bg-body); 
             height: 100dvh; 
             overflow: hidden; 
-            /* HIGH DENSITY FONT SIZE */
             font-size: 11.5px; 
             color: var(--text-main); 
             transition: background-color 0.3s, color 0.3s;
         }
 
         /* --- PRINT MODE --- */
-        body.print-mode {
-            background: white !important; color: black !important;
-            height: auto !important; overflow: visible !important;
-            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
-        }
+        body.print-mode { background: white !important; color: black !important; height: auto !important; overflow: visible !important; }
         body.print-mode .sidebar, body.print-mode .top-bar, body.print-mode .tl-controls { display: none !important; }
-        body.print-mode .main { width: 1200px !important; margin: 0 auto; padding: 0; overflow: visible; height: auto; }
-        
-        body.print-mode .dashboard-grid { 
-            display: grid !important; grid-template-columns: repeat(3, 1fr) !important; 
-            gap: 10px !important; padding: 0 20px !important; 
-        }
-        
-        body.print-mode .d-card, body.print-mode .kpi-card { 
-            background: white !important; border: 1px solid #ccc !important; 
-            color: black !important; box-shadow: none !important;
-        }
-        body.print-mode .card-head, body.print-mode .kpi-title { color: #333 !important; }
-
-        /* Print Layout Reset */
+        body.print-mode .main { width: 1200px !important; margin: 0 auto; overflow: visible; height: auto; }
+        body.print-mode .dashboard-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
+        body.print-mode .d-card, body.print-mode .kpi-card { box-shadow: none !important; border: 1px solid #ccc !important; }
         body.print-mode .a-dept, body.print-mode .a-trend, body.print-mode .a-list, body.print-mode .a-saved { grid-column: span 3 !important; }
         body.print-mode .a-top-equip { grid-row: span 1 !important; }
-        body.print-mode .chart-box { height: 200px !important; }
+        body.print-mode .chart-box { height: 200px !important; } 
         body.print-mode .cb-tall { height: 200px !important; }
 
         /* --- UI STYLES --- */
@@ -100,172 +84,191 @@
 
         .sidebar { width: 250px; background-color: var(--bg-sidebar); color: white; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); flex-shrink: 0; z-index: 100; height: 100dvh; border-right: 1px solid rgba(255,255,255,0.05); }
         .sidebar.desktop-closed { width: 0; overflow: hidden; border: none; }
-        .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 5px; min-width: 250px; flex-shrink: 0; }
-        .sidebar-logo { max-height: 35px; max-width: 160px; object-fit: contain; }
+        .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 5px; min-width: 250px; flex-shrink: 0; }
+        .sidebar-logo { max-height: 40px; max-width: 160px; object-fit: contain; }
         .sidebar-close-btn { background: rgba(255,255,255,0.05); border: none; color: #94a3b8; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .sidebar-close-btn:hover { background: rgba(255,255,255,0.1); color: white; }
         
-        .nav-section { padding: 8px 12px; min-width: 250px; flex-shrink: 0; }
+        .nav-section { padding: 10px 12px; }
         .nav-label { font-size: 0.65rem; font-weight: 700; color: #64748b; margin: 10px 0 5px 8px; text-transform: uppercase; letter-spacing: 1.2px; }
-        .nav-item { padding: 8px 12px; margin-bottom: 4px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #94a3b8; font-weight: 500; font-size: 0.85rem; transition: all 0.2s ease; border: 1px solid transparent; }
-        .nav-item:hover { background: rgba(255,255,255,0.04); color: white; transform: translateX(4px); }
-        .nav-item.active { background: linear-gradient(135deg, var(--accent-teal), var(--accent-teal-dark)); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3); border: 1px solid rgba(255,255,255,0.1); }
-        .nav-item i { width: 18px; text-align: center; font-size: 0.9rem; }
-
-        .sidebar-content { padding: 0 12px 12px 12px; overflow-y: auto; flex-grow: 1; min-width: 250px; }
-        .sidebar-footer { margin-top: auto; padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); min-width: 250px; flex-shrink: 0; background-color: var(--bg-sidebar); }
-        .side-btn { width: 100%; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; transition: 0.2s; font-size: 0.8rem; }
-        .btn-upload-side { background: var(--accent-teal); color: white; }
-        .btn-upload-side:hover { background: var(--accent-teal-dark); }
-        .btn-reset-side { background: rgba(255,255,255,0.05); color: #ef4444; }
-        .btn-reset-side:hover { background: rgba(239, 68, 68, 0.1); }
-        .footer-credits { text-align: center; color: #64748b; font-size: 0.6rem; margin-top: 8px; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 8px; }
-        .dev-name { color: var(--accent-teal); font-weight: 600; }
-
-        .filter-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 6px 8px; margin-bottom: 5px; cursor: pointer; display: flex; align-items: center; transition: all 0.2s; position: relative; overflow: hidden; }
-        .filter-card:hover { background: rgba(255,255,255,0.06); }
-        .unit-card.active { border-color: var(--accent-blue); background: rgba(59, 130, 246, 0.15); }
-        .unit-card.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--accent-blue); }
-        .zone-card.active { border-color: var(--accent-teal); background: rgba(13, 148, 136, 0.15); }
-        .zone-card.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--accent-teal); }
+        .nav-item { padding: 10px 12px; margin-bottom: 4px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #94a3b8; font-weight: 500; font-size: 0.85rem; transition: all 0.2s ease; border: 1px solid transparent; }
+        .nav-item:hover { background: rgba(255,255,255,0.08); color: white; transform: translateX(4px); }
+        .nav-item.active { background: var(--grad-teal); color: white; font-weight: 600; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3); border: 1px solid rgba(255,255,255,0.1); }
         
-        .icon-box { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-right: 8px; background: rgba(255,255,255,0.08); flex-shrink: 0; }
-        .zone-iron .icon-box { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; }
-        .zone-steel .icon-box { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; }
-        .zone-process .icon-box { background: linear-gradient(135deg, #10b981, #047857); color: white; }
-        .unit-icon { color: var(--accent-blue); }
-        .card-info { flex-grow: 1; overflow: hidden; }
+        .sidebar-content { padding: 0 12px 15px 12px; overflow-y: auto; flex-grow: 1; }
+        .sidebar-footer { margin-top: auto; padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); background-color: var(--bg-sidebar); }
+        .side-btn { width: 100%; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; transition: 0.2s; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .btn-upload-side { background: var(--grad-teal); color: white; }
+        .btn-upload-side:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-reset-side { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .btn-reset-side:hover { background: rgba(239, 68, 68, 0.2); }
+        .footer-credits { text-align: center; color: #64748b; font-size: 0.6rem; margin-top: 10px; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 10px; }
+        .dev-name { color: var(--c-teal); font-weight: 600; }
+
+        .filter-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; margin-bottom: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.2s; position: relative; overflow: hidden; }
+        .filter-card:hover { background: rgba(255,255,255,0.08); transform: translateX(2px); }
+        .unit-card.active { border-color: var(--c-blue); background: rgba(37, 99, 235, 0.15); }
+        .unit-card.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--c-blue); }
+        .zone-card.active { border-color: var(--c-teal); background: rgba(13, 148, 136, 0.15); }
+        .zone-card.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--c-teal); }
+        
+        .icon-box { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-right: 10px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .zone-iron .icon-box { background: var(--grad-red); color: white; }
+        .zone-steel .icon-box { background: var(--grad-blue); color: white; }
+        .zone-process .icon-box { background: var(--grad-green); color: white; }
+        .unit-icon { color: var(--c-blue); }
         .card-name { font-weight: 500; font-size: 0.8rem; display: block; color: #e2e8f0; }
         .card-count { font-size: 0.65rem; opacity: 0.6; }
 
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; width: 100%; }
         
-        .top-bar { background: var(--bg-card); padding: 5px 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; z-index: 40; flex-shrink: 0; transition: background 0.3s; }
-        .top-left { display: flex; align-items: center; overflow: hidden; flex-grow: 1; }
+        /* Modern Top Bar */
+        .top-bar { background: var(--bg-card); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05); position: relative; z-index: 40; flex-shrink: 0; }
         .toggle-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-muted); padding: 5px; margin-right: 10px; }
-        .page-header-title { font-size: 1rem; font-weight: 700; color: var(--text-main); margin-right: 15px; white-space: nowrap; border-left: 2px solid var(--border-color); padding-left: 10px; }
-        .settings-btn, .export-btn, .theme-btn { background:none; border:none; cursor:pointer; font-size:1rem; color: var(--text-muted); margin-left:8px; }
-        .settings-btn:hover, .export-btn:hover, .theme-btn:hover { color: var(--accent-teal); }
+        .page-header-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-right: 15px; white-space: nowrap; border-left: 2px solid var(--border-color); padding-left: 15px; letter-spacing: -0.5px; }
+        .settings-btn, .export-btn, .theme-btn { background:var(--bg-body); width:32px; height:32px; border-radius:8px; border:1px solid var(--border-color); cursor:pointer; font-size:0.9rem; color: var(--text-muted); margin-left:8px; display:flex; align-items:center; justify-content:center; transition:0.2s; }
+        .settings-btn:hover, .export-btn:hover, .theme-btn:hover { color: var(--c-teal); border-color: var(--c-teal); background: rgba(13, 148, 136, 0.05); transform: translateY(-1px); }
         
-        .last-update { background: var(--border-color); color: var(--text-muted); padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; margin-right: 10px; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+        .last-update { background: var(--bg-body); color: var(--text-muted); padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; margin-right: 10px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 6px; }
         .filters-active { display: flex; gap: 6px; margin-left: 10px; overflow-x: auto; white-space: nowrap; max-width: 50vw; padding-bottom: 2px; }
-        .filter-tag { background: var(--accent-teal); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+        .filter-tag { background: var(--grad-teal); color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(13, 148, 136, 0.2); }
 
-        /* KPI COMPACT MODE */
-        .top-stats-container { display: flex; gap: 8px; padding: 8px 15px; flex-wrap: wrap; align-items: stretch; flex-shrink: 0; background-color: var(--bg-body); z-index: 30; }
-        .kpi-row { flex-grow: 1; display: flex; gap: 8px; flex-wrap: wrap; }
-        .kpi-card { flex: 1 1 120px; background: var(--bg-card); border-radius: 8px; padding: 8px 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; border-top: 3px solid #cbd5e1; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; min-width: 110px; border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; }
+        /* KPI MODERN CARDS */
+        .top-stats-container { display: flex; gap: 10px; padding: 15px 20px 5px 20px; flex-wrap: wrap; align-items: stretch; flex-shrink: 0; background-color: var(--bg-body); z-index: 30; }
+        .kpi-row { flex-grow: 1; display: flex; gap: 10px; flex-wrap: wrap; }
+        .kpi-card { flex: 1 1 130px; background: var(--bg-card); border-radius: 12px; padding: 12px 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); cursor: pointer; border: 1px solid transparent; transition: all 0.25s ease; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; min-width: 120px; }
         
-        .kpi-card.active.k-gen { background-color: rgba(100, 116, 139, 0.1); border-color: var(--c-generated); }
-        .kpi-card.active.k-comp { background-color: rgba(22, 163, 74, 0.1); border-color: var(--c-completed); }
-        .kpi-card.active.k-open { background-color: rgba(245, 158, 11, 0.1); border-color: var(--c-open); }
-        .kpi-card.active.k-pend { background-color: rgba(220, 38, 38, 0.1); border-color: var(--c-pending); }
-        .kpi-card.active.k-plan { background-color: rgba(37, 99, 235, 0.1); border-color: var(--c-planned); }
+        /* KPI Hover Lift */
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04); }
 
-        .k-gen { border-top-color: var(--c-generated) !important; } .k-gen .kpi-num, .k-gen .kpi-icon { color: var(--c-generated) !important; }
-        .k-comp { border-top-color: var(--c-completed) !important; } .k-comp .kpi-num, .k-comp .kpi-icon { color: var(--c-completed) !important; }
-        .k-open { border-top-color: var(--c-open) !important; } .k-open .kpi-num, .k-open .kpi-icon { color: var(--c-open) !important; }
-        .k-pend { border-top-color: var(--c-pending) !important; } .k-pend .kpi-num, .k-pend .kpi-icon { color: var(--c-pending) !important; }
-        .k-plan { border-top-color: var(--c-planned) !important; } .k-plan .kpi-num, .k-plan .kpi-icon { color: var(--c-planned) !important; }
+        .kpi-card.active.k-gen { border-color: #94a3b8; background: linear-gradient(to bottom right, var(--bg-card), #f8fafc); }
+        .kpi-card.active.k-comp { border-color: var(--c-green); background: linear-gradient(to bottom right, var(--bg-card), #f0fdf4); }
+        .kpi-card.active.k-open { border-color: var(--c-yellow); background: linear-gradient(to bottom right, var(--bg-card), #fefce8); }
+        .kpi-card.active.k-pend { border-color: var(--c-red); background: linear-gradient(to bottom right, var(--bg-card), #fef2f2); }
+        .kpi-card.active.k-plan { border-color: var(--c-blue); background: linear-gradient(to bottom right, var(--bg-card), #eff6ff); }
+        
+        /* Dark mode adjustments for gradients */
+        body.dark-mode .kpi-card.active { background: var(--bg-card); }
+
+        /* KPI Text Colors */
+        .k-gen .kpi-num, .k-gen .kpi-icon { color: #64748b; }
+        .k-comp .kpi-num, .k-comp .kpi-icon { color: var(--c-green); }
+        .k-open .kpi-num, .k-open .kpi-icon { color: var(--c-yellow); }
+        .k-pend .kpi-num, .k-pend .kpi-icon { color: var(--c-red); }
+        .k-plan .kpi-num, .k-plan .kpi-icon { color: var(--c-blue); }
 
         .kpi-content { z-index: 2; }
-        .kpi-title { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; letter-spacing: 0.5px; }
-        .kpi-num { font-size: 1.4rem; font-weight: 800; line-height: 1; color: var(--text-main); }
-        .kpi-icon { font-size: 1.6rem; opacity: 0.15; position: absolute; right: 8px; bottom: 6px; z-index: 1; }
+        .kpi-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.5px; }
+        .kpi-num { font-size: 1.6rem; font-weight: 800; line-height: 1; letter-spacing: -1px; }
         
-        .issuer-card { flex: 0 0 160px; background: var(--bg-card); border-radius: 8px; padding: 6px 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-top: 3px solid #64748b; display: flex; flex-direction: column; justify-content: center; }
-        .issuer-header { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
-        .issuer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-        .issuer-val { font-size: 0.95rem; font-weight: 800; color: var(--text-main); }
+        /* Modern Glassy Icon Circle */
+        .kpi-icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: rgba(0,0,0,0.04); }
+        .k-gen .kpi-icon-circle { background: #f1f5f9; }
+        .k-comp .kpi-icon-circle { background: #dcfce7; }
+        .k-open .kpi-icon-circle { background: #fef9c3; }
+        .k-pend .kpi-icon-circle { background: #fee2e2; }
+        .k-plan .kpi-icon-circle { background: #dbeafe; }
+        
+        body.dark-mode .kpi-icon-circle { background: rgba(255,255,255,0.05); }
 
-        .scroll-content { flex-grow: 1; overflow-y: auto; padding: 0 15px 20px 15px; }
+        .issuer-card { flex: 0 0 170px; background: var(--bg-card); border-radius: 12px; padding: 10px 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: center; }
+        .issuer-header { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
+        .issuer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size:0.8rem; }
+        .issuer-val { font-size: 1rem; font-weight: 800; color: var(--text-main); }
+
+        .scroll-content { flex-grow: 1; overflow-y: auto; padding: 5px 20px 20px 20px; }
 
         .view-section { display: none; }
-        .view-section.active-view { display: block; animation: fadeIn 0.3s ease; }
+        .view-section.active-view { display: block; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- DASHBOARD GRID SYSTEM (HIGH DENSITY) --- */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding-bottom: 20px; }
-        .d-card { background: var(--bg-card); border-radius: 8px; padding: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-top: 3px solid var(--accent-teal); display: flex; flex-direction: column; min-width: 0; width: 100%; height: 100%; }
-        .card-head { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; display:flex; justify-content:space-between; }
+        /* --- DASHBOARD GRID SYSTEM --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding-bottom: 20px; }
+        .d-card { background: var(--bg-card); border-radius: 12px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.04); border: 1px solid var(--border-color); display: flex; flex-direction: column; min-width: 0; width: 100%; height: 100%; transition: transform 0.2s; }
+        .d-card:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(0,0,0,0.08); }
         
-        /* High Density Chart Heights (Default for top rows) */
+        .card-head { font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; display:flex; justify-content:space-between; align-items:center; }
+        .card-head small { font-weight:400; color:var(--text-muted); }
+
         .chart-box { position: relative; width: 100%; flex-grow: 1; min-height: 0; } 
         canvas { width: 100% !important; height: 100% !important; }
         .cb-standard { height: 135px; } 
-        .cb-tall { height: 300px; } /* Fits 2x Standard + Gap */
+        /* The Tall height is specifically calculated to match stacked charts */
+        .cb-tall { height: 300px; } 
 
-        /* --- ROW 2 --- */
+        /* --- GRID AREAS --- */
         .a-dept { grid-column: span 2; }
         .a-cat { grid-column: span 1; }
         .a-equip { grid-column: span 1; }
 
-        /* --- ROW 3 --- */
         .a-crit { grid-column: span 1; }
         .a-age { grid-column: span 1; }
         .a-act-taken { grid-column: span 1; }
         .a-top-equip { grid-column: span 1; grid-row: span 2; }
 
-        /* --- ROW 4 --- */
         .a-fault { grid-column: span 1; }
         .a-closed-under { grid-column: span 1; }
         .a-top-area { grid-column: span 1; }
 
-        /* --- ROW 5 (Split 50/50) --- */
+        /* --- BOTTOM CHARTS: INCREASED HEIGHT --- */
         .a-trend { grid-column: span 2; } 
         .a-saved { grid-column: span 2; } 
-        
-        /* --- ROW 6 --- */
-        .a-list { 
-            grid-column: span 4; 
-            height: 400px; /* Increased Height */
-            overflow: hidden; 
-        } 
+        /* Override default height for bottom summary charts */
+        .a-trend .cb-standard, .a-saved .cb-standard { height: 300px; } /* MATCHES DEPARTMENT WISE (Tall) */
+
+        .a-list { grid-column: span 4; height: 400px; overflow: hidden; } 
         .a-list > div[style*="overflow-y:auto"] { flex-grow: 1; }
 
-        .fault-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; height: 100px; overflow-y: auto; }
-        .fault-pill { background: var(--bg-body); border: 1px solid var(--border-color); padding: 3px 6px; border-radius: 4px; display: flex; justify-content: space-between; font-size: 0.7rem; cursor: pointer; color: var(--text-main); }
-        .fault-pill:hover, .fault-pill.active { background: rgba(13, 148, 136, 0.1); border-color: var(--accent-teal); }
-        .age-row { cursor: pointer; transition: 0.2s; color: var(--text-main); } .age-row.active { border: 2px solid var(--accent-teal); font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; } 
-        th { text-align: left; padding: 4px; background: var(--bg-body); position: sticky; top: 0; z-index: 10; color: var(--text-muted); } 
-        td { padding: 4px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
-        .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: auto; display: flex; align-items: center; justify-content: center; width: 80%; height: 80%; border-radius: 50%; z-index: 10; } 
-        .dc-val { font-size: 1.1rem; font-weight: 800; color: var(--text-main); line-height: 1; text-align: center; }
+        /* Internal Components */
+        .fault-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; height: 100px; overflow-y: auto; padding-right:4px; }
+        .fault-pill { background: var(--bg-body); border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 6px; display: flex; justify-content: space-between; font-size: 0.75rem; cursor: pointer; color: var(--text-main); transition:0.2s; }
+        .fault-pill:hover, .fault-pill.active { background: rgba(13, 148, 136, 0.1); border-color: var(--c-teal); color: var(--c-teal); }
+        
+        .age-row { cursor: pointer; transition: 0.2s; color: var(--text-main); border-radius:4px; } 
+        .age-row td { padding: 6px 8px; border-bottom: 1px solid var(--border-color); }
+        .age-row.active { border: 2px solid var(--c-teal); font-weight: bold; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.75rem; } 
+        th { text-align: left; padding: 8px; background: var(--bg-body); position: sticky; top: 0; z-index: 10; color: var(--text-muted); font-weight:600; } 
+        td { padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+        tr:hover td { background-color: var(--bg-body); }
+
+        .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: auto; display: flex; align-items: center; justify-content: center; width: 70%; height: 70%; border-radius: 50%; z-index: 10; } 
+        .dc-val { font-size: 1.4rem; font-weight: 800; color: var(--text-main); line-height: 1; text-align: center; }
 
         /* TIMELINE STYLES */
         .timeline-wrapper { padding: 0 15px 30px 15px; }
-        .tl-controls { display: flex; gap: 10px; margin-bottom: 15px; background: var(--bg-card); padding: 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .tl-select { padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; flex-grow: 1; font-size: 0.85rem; background: var(--bg-body); color: var(--text-main); }
+        .tl-controls { display: flex; gap: 10px; margin-bottom: 15px; background: var(--bg-card); padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .tl-select { padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; flex-grow: 1; font-size: 0.9rem; background: var(--bg-body); color: var(--text-main); outline:none; }
         .timeline-container { position: relative; max-width: 900px; margin: 0 auto; }
         .timeline-container::after { content: ''; position: absolute; width: 3px; background-color: var(--border-color); top: 0; bottom: 0; left: 24px; margin-left: -1px; }
-        .tl-item { padding: 8px 20px 8px 50px; position: relative; background-color: inherit; width: 100%; }
-        .tl-dot { position: absolute; width: 16px; height: 16px; left: 17px; background-color: var(--bg-card); border: 3px solid var(--accent-teal); top: 12px; border-radius: 50%; z-index: 1; display:block; }
-        .tl-item.critical .tl-dot { border-color: var(--accent-red); }
-        .tl-item.marginal .tl-dot { border-color: var(--accent-yellow); }
-        .tl-content { padding: 12px; background-color: var(--bg-card); position: relative; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 3px solid var(--accent-teal); }
-        .tl-item.critical .tl-content { border-left-color: var(--accent-red); }
-        .tl-item.marginal .tl-content { border-left-color: var(--accent-yellow); }
+        .tl-item { padding: 10px 20px 10px 60px; position: relative; width: 100%; }
+        .tl-dot { position: absolute; width: 18px; height: 18px; left: 17px; background-color: var(--bg-card); border: 4px solid var(--c-teal); top: 15px; border-radius: 50%; z-index: 1; display:block; box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1); }
+        .tl-item.critical .tl-dot { border-color: var(--c-red); box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); }
+        .tl-item.marginal .tl-dot { border-color: var(--c-yellow); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1); }
+        .tl-content { padding: 15px; background-color: var(--bg-card); position: relative; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--c-teal); }
+        .tl-item.critical .tl-content { border-left-color: var(--c-red); }
+        .tl-item.marginal .tl-content { border-left-color: var(--c-yellow); }
         .tl-date { font-weight: 700; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 4px; display:flex; justify-content:space-between; }
         .tl-obs { font-weight: 600; color: var(--text-main); margin-bottom: 4px; font-size: 0.95rem; }
         .tl-rec { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-style: italic; }
         .tl-action-box { background: rgba(13, 148, 136, 0.1); padding: 6px; border-radius: 4px; border: 1px solid var(--accent-teal); margin-top: 8px; }
         .tl-action-date { font-size: 0.65rem; color: var(--accent-teal); font-weight: 700; margin-bottom: 2px; text-transform: uppercase; }
         .tl-action-text { font-size: 0.8rem; color: var(--text-main); }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-box { background: var(--bg-card); padding: 25px; border-radius: 8px; width: 450px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); color: var(--text-main); }
-        .map-row { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; font-size: 0.9rem; }
-        .btn-save { width:100%; background: var(--accent-teal); color: white; border: none; padding: 10px; border-radius: 6px; margin-top: 15px; cursor: pointer; font-weight: 600; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+        .modal-box { background: var(--bg-card); padding: 30px; border-radius: 12px; width: 450px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); color: var(--text-main); }
+        .map-row { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; font-size: 0.9rem; }
+        .btn-save { width:100%; background: var(--grad-teal); color: white; border: none; padding: 12px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(13, 148, 136, 0.3); }
         
         @media (max-width: 1200px) {
             .dashboard-grid { grid-template-columns: 1fr 1fr; }
             .a-dept, .a-trend, .a-list, .a-saved { grid-column: span 2; }
             .a-top-equip, .a-top-area { grid-row: auto; }
             .cb-tall { height: 250px; }
+            .a-trend .cb-standard, .a-saved .cb-standard { height: 250px; }
             .issuer-card { width: 100%; flex: auto; flex-direction: row; align-items: center; gap: 20px; justify-content: space-between; }
             .issuer-header { border-bottom: none; margin-bottom: 0; padding-bottom: 0; border-right: 1px solid #eee; padding-right: 20px; }
-            .a-list { height: 350px; }
         }
         @media (max-width: 768px) {
             .filters-active { margin-left: 10px; max-width: 50vw; }
@@ -275,7 +278,7 @@
             .cb-tall { height: 280px; } .top-stats-container { padding: 10px; } .dashboard-grid { padding: 0 10px 20px 10px; }
             .last-update { display: none; } .page-header-title { font-size: 1rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
             .tl-controls { flex-direction: column; } .timeline-container::after { left: 20px; } .tl-item { padding-left: 45px; padding-right: 10px; } .tl-dot { left: 11px; }
-            .a-list { height: 300px; }
+            .a-list { height: 350px; }
         }
     </style>
 </head>
@@ -288,7 +291,7 @@
             <h3>⚙️ Zone Settings</h3>
             <div id="mappingContainer"></div>
             <button class="btn-save" onclick="saveMappings()">Save Configuration</button>
-            <button class="btn-save" style="background:var(--border-color); color:var(--text-main); margin-top:10px;" onclick="closeSettings()">Cancel</button>
+            <button class="btn-save" style="background:var(--border-color); color:var(--text-main); margin-top:10px; box-shadow:none; border:1px solid var(--border-color);" onclick="closeSettings()">Cancel</button>
         </div>
     </div>
 
@@ -351,23 +354,23 @@
             <div class="kpi-row">
                 <div class="kpi-card k-gen active" id="card-Generated" onclick="setKPI('Generated')">
                     <div class="kpi-content"><div class="kpi-title">Generated</div><div class="kpi-num" id="k-gen">0</div></div>
-                    <i class="fas fa-file-alt kpi-icon"></i>
+                    <div class="kpi-icon-circle"><i class="fas fa-file-alt kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
                 </div>
                 <div class="kpi-card k-comp" id="card-Completed" onclick="setKPI('Completed')">
                     <div class="kpi-content"><div class="kpi-title">Completed</div><div class="kpi-num" id="k-comp">0</div></div>
-                    <i class="fas fa-check-circle kpi-icon"></i>
+                    <div class="kpi-icon-circle"><i class="fas fa-check-circle kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
                 </div>
                 <div class="kpi-card k-open" id="card-Open" onclick="setKPI('Open')">
                     <div class="kpi-content"><div class="kpi-title">Open Cases</div><div class="kpi-num" id="k-open">0</div></div>
-                    <i class="fas fa-folder-open kpi-icon"></i>
+                    <div class="kpi-icon-circle"><i class="fas fa-folder-open kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
                 </div>
                 <div class="kpi-card k-pend" id="card-Pending" onclick="setKPI('Pending')">
                     <div class="kpi-content"><div class="kpi-title">Act. Pending</div><div class="kpi-num" id="k-pend">0</div></div>
-                    <i class="fas fa-clock kpi-icon"></i>
+                    <div class="kpi-icon-circle"><i class="fas fa-clock kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
                 </div>
                 <div class="kpi-card k-plan" id="card-Planned" onclick="setKPI('Planned')">
                     <div class="kpi-content"><div class="kpi-title">Act. Planned</div><div class="kpi-num" id="k-plan">0</div></div>
-                    <i class="fas fa-calendar-alt kpi-icon"></i>
+                    <div class="kpi-icon-circle"><i class="fas fa-calendar-alt kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
                 </div>
             </div>
             <div class="issuer-card">
@@ -416,7 +419,7 @@
                         </div>
                     </div>
                     
-                    <div class="d-card a-top-equip" style="border-top-color: var(--accent-red);">
+                    <div class="d-card a-top-equip">
                         <div class="card-head">Top 10 Bad Actors</div>
                         <div class="chart-box cb-tall"><canvas id="cTopEquip"></canvas></div>
                     </div>
@@ -425,32 +428,32 @@
                         <div class="card-head">Fault Type</div>
                         <div class="fault-grid" id="faultList"></div>
                     </div>
-                    <div class="d-card a-closed-under" style="border-top-color: var(--accent-green);">
+                    <div class="d-card a-closed-under">
                         <div class="card-head">Diagnosis Accuracy</div>
                         <div class="chart-box cb-standard">
                             <canvas id="cClosedUnder"></canvas>
                             <div class="donut-center"><div class="dc-val" id="valClosedUnder">0</div></div>
                         </div>
                     </div>
-                    <div class="d-card a-top-area" style="border-top-color: var(--accent-yellow);">
+                    <div class="d-card a-top-area">
                         <div class="card-head">Top 5 Abnormal Areas</div>
                         <div class="chart-box cb-standard"><canvas id="cTopArea"></canvas></div>
                     </div>
 
                     <div class="d-card a-trend">
                         <div class="card-head">Input vs Closed (Last 7 Days)</div>
-                        <div class="chart-box cb-tall"><canvas id="cTrend"></canvas></div>
+                        <div class="chart-box cb-standard"><canvas id="cTrend"></canvas></div>
                     </div>
-                    <div class="d-card a-saved" style="border-top-color: var(--accent-purple);">
+                    <div class="d-card a-saved">
                         <div class="card-head" style="justify-content:space-between; align-items:center;">
                             <span>Downtime Saved</span>
                             <div style="display:flex; gap:8px; align-items:center;">
                                 <select id="optFY" style="padding:2px 4px; font-size:0.8rem; border:1px solid var(--border-color); border-radius:4px; background:var(--bg-body); color:var(--text-main);" onchange="renderSavedChart()">
                                     </select>
-                                <span id="valTotalSaved" style="font-weight:800; color:var(--accent-purple); font-size:0.9rem;">0h</span>
+                                <span id="valTotalSaved" style="font-weight:800; color:var(--c-purple); font-size:0.9rem;">0h</span>
                             </div>
                         </div>
-                        <div class="chart-box cb-tall"><canvas id="cSaved"></canvas></div>
+                        <div class="chart-box cb-standard"><canvas id="cSaved"></canvas></div>
                     </div>
 
                     <div class="d-card a-list">
@@ -492,6 +495,14 @@
         let savedChartInstance = null;
         
         Chart.register(ChartDataLabels);
+
+        // Modern Gradients helper
+        function getGradient(ctx, colorStart, colorEnd) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, colorStart);
+            gradient.addColorStop(1, colorEnd);
+            return gradient;
+        }
 
         const ICONS={'Bearing':'fa-circle-notch','Alignment':'fa-ruler-combined','Balancing':'fa-crosshairs','Lubrication':'fa-oil-can','Electrical':'fa-bolt','Gear':'fa-cogs','Flow':'fa-wind','Structure':'fa-cubes'};
         const ZONES_DEFAULT=['IRON MAKING','STEEL MAKING','PROCESS PLANT','OTHER'];
@@ -684,23 +695,53 @@
             const txtColor = isDark ? '#cbd5e1' : '#475569';
             Chart.defaults.color = txtColor;
             Chart.defaults.borderColor = isDark ? '#334155' : '#e2e8f0';
+            
+            // Global Animation
+            Chart.defaults.animation = { duration: 1000, easing: 'easeOutQuart' };
 
             const plants=[...new Set(data.map(r=>r.Plant))];
+            
+            // Helper for gradients in loops
+            const ctxDept = document.getElementById('cDept').getContext('2d');
+            
             drawChart('cDept', 'bar', {
                 labels:plants,
                 datasets:[
-                    {label:'Critical',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),backgroundColor:'#dc2626',stack:'0', borderRadius: 4},
-                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:'#f59e0b',stack:'0', borderRadius: 4}
+                    {
+                        label:'Critical',
+                        data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),
+                        backgroundColor: getGradient(ctxDept, '#f87171', '#dc2626'),
+                        stack:'0', borderRadius: 4
+                    },
+                    {
+                        label:'Marginal',
+                        data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),
+                        backgroundColor: getGradient(ctxDept, '#fbbf24', '#d97706'),
+                        stack:'0', borderRadius: 4
+                    }
                 ]
             }, 'Plant');
 
             const cats=agg('Category');
-            drawChart('cCat', 'bar', {labels:Object.keys(cats),datasets:[{data:Object.values(cats),backgroundColor:'#0d9488',label:'Count', borderRadius: 4}]}, 'Category');
+            const ctxCat = document.getElementById('cCat').getContext('2d');
+            drawChart('cCat', 'bar', {
+                labels:Object.keys(cats),
+                datasets:[{
+                    data:Object.values(cats),
+                    backgroundColor: getGradient(ctxCat, '#2dd4bf', '#0d9488'),
+                    label:'Count', borderRadius: 4
+                }]
+            }, 'Category');
 
             const equips=agg('Type');
+            const ctxEquip = document.getElementById('cEquip').getContext('2d');
             drawChart('cEquip', 'bar', {
                 labels:Object.keys(equips),
-                datasets:[{data:Object.values(equips),backgroundColor:'#475569',label:'Count',indexAxis: 'y', borderRadius: 4}]
+                datasets:[{
+                    data:Object.values(equips),
+                    backgroundColor: getGradient(ctxEquip, '#60a5fa', '#2563eb'),
+                    label:'Count',indexAxis: 'y', borderRadius: 4
+                }]
             }, 'Type', { indexAxis: 'y' }); 
 
             const crits = agg('Criticality');
@@ -708,13 +749,13 @@
             const critValues = Object.values(crits);
             const critColors = critLabels.map(label => {
                 const l = label.toLowerCase();
-                if(l.includes('critical')) return '#ef4444';
-                if(l.includes('marginal')) return '#f59e0b'; 
+                if(l.includes('critical')) return '#dc2626';
+                if(l.includes('marginal')) return '#d97706'; 
                 return '#cbd5e1'; 
             });
             drawChart('cCrit', 'doughnut', {
                 labels: critLabels,
-                datasets: [{ data: critValues, backgroundColor: critColors }]
+                datasets: [{ data: critValues, backgroundColor: critColors, borderWidth:0 }]
             }, 'Criticality');
 
             // Action Taken
@@ -736,7 +777,7 @@
                 }
             };
             const showCount = () => {
-                centerEl.style.fontSize = '1.1rem';
+                centerEl.style.fontSize = '1.4rem';
                 centerEl.style.lineHeight = '1';
                 centerEl.innerText = taken;
             };
@@ -767,11 +808,27 @@
                 return da.localeCompare(db);
             }).slice(-7);
             
+            // Create Context for Gradient Lines
+            const ctxTrend = document.getElementById('cTrend').getContext('2d');
+            const gradBlue = ctxTrend.createLinearGradient(0,0,0,300);
+            gradBlue.addColorStop(0, 'rgba(37, 99, 235, 0.5)');
+            gradBlue.addColorStop(1, 'rgba(37, 99, 235, 0)');
+            
+            const gradGreen = ctxTrend.createLinearGradient(0,0,0,300);
+            gradGreen.addColorStop(0, 'rgba(22, 163, 74, 0.5)');
+            gradGreen.addColorStop(1, 'rgba(22, 163, 74, 0)');
+
             drawChart('cTrend', 'line', {
                 labels: sortedDates,
                 datasets: [
-                    {label: 'Generated', data: sortedDates.map(d => genMap[d] || 0), borderColor: '#2563eb', backgroundColor: 'transparent', fill: false, tension: 0.3},
-                    {label: 'Closed', data: sortedDates.map(d => closedMap[d] || 0), borderColor: '#16a34a', backgroundColor: 'transparent', fill: false, tension: 0.3}
+                    {
+                        label: 'Generated', data: sortedDates.map(d => genMap[d] || 0), 
+                        borderColor: '#2563eb', backgroundColor: gradBlue, fill: true, tension: 0.4
+                    },
+                    {
+                        label: 'Closed', data: sortedDates.map(d => closedMap[d] || 0), 
+                        borderColor: '#16a34a', backgroundColor: gradGreen, fill: true, tension: 0.4
+                    }
                 ]
             }, null, { plugins: { legend: { display: true, position: 'bottom' } } });
 
@@ -782,13 +839,14 @@
             });
             const top10 = Object.entries(eqCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
             const fullNames = top10.map(i => i[0]); 
-            
+            const ctxTop = document.getElementById('cTopEquip').getContext('2d');
+
             drawChart('cTopEquip', 'bar', {
                 labels: fullNames, 
                 datasets: [{
                     label: 'Open Faults', 
                     data: top10.map(i => i[1]), 
-                    backgroundColor: '#ef4444', 
+                    backgroundColor: getGradient(ctxTop, '#f87171', '#dc2626'), 
                     indexAxis: 'y',
                     borderRadius: 4
                 }]
@@ -827,13 +885,14 @@
             const top5Areas = Object.entries(areaCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
             const areaLabels = top5Areas.map(i => i[0]); 
             const areaData = top5Areas.map(i => i[1]);
+            const ctxArea = document.getElementById('cTopArea').getContext('2d');
 
             drawChart('cTopArea', 'bar', {
                 labels: areaLabels,
                 datasets: [{
                     label: 'Reports',
                     data: areaData,
-                    backgroundColor: '#f59e0b', 
+                    backgroundColor: getGradient(ctxArea, '#fbbf24', '#d97706'), 
                     indexAxis: 'y',
                     borderRadius: 4
                 }]
@@ -841,7 +900,7 @@
                 indexAxis: 'y',
                 layout: { padding: { left: 0 } },
                 scales: { 
-                    x: { display: false, grid: { display: false } },
+                    x: { display: false, grid: { display: false } }, 
                     y: { 
                         display: true, 
                         grid: { display: false },
@@ -879,7 +938,8 @@
                 labels: ['True Positive (TP)', 'False Positive (FP)', 'False Negative (FN)'],
                 datasets: [{
                     data: [closedUnderCounts['TP'], closedUnderCounts['FP'], closedUnderCounts['FN']],
-                    backgroundColor: ['#16a34a', '#f59e0b', '#dc2626']
+                    backgroundColor: ['#16a34a', '#d97706', '#dc2626'],
+                    borderWidth: 0
                 }]
             }, 'Closed Under', { 
                 filterValues: ['TP', 'FP', 'FN'], 
@@ -927,6 +987,11 @@
 
             const isDark = document.body.classList.contains('dark-mode');
             const txtColor = isDark ? '#cbd5e1' : '#475569';
+            
+            // Gradient purple
+            const gradPurple = ctx.createLinearGradient(0,0,0,400);
+            gradPurple.addColorStop(0, '#a78bfa');
+            gradPurple.addColorStop(1, '#7c3aed');
 
             savedChartInstance = new Chart(ctx, {
                 type: 'bar',
@@ -935,7 +1000,7 @@
                     datasets: [{
                         label: 'Hours Saved',
                         data: savedByMonth,
-                        backgroundColor: '#8b5cf6',
+                        backgroundColor: gradPurple,
                         borderRadius: 4
                     }]
                 },
@@ -974,7 +1039,6 @@
             const scales = extraOptions.scales || defaultScales;
 
             // Merge "barPercentage: 0.9" and "categoryPercentage: 0.9" if not provided
-            // This tightens bars visually
             if (type === 'bar') {
                 data.datasets.forEach(ds => {
                    if(ds.barPercentage === undefined) ds.barPercentage = 0.9;
@@ -990,7 +1054,7 @@
                     ...extraOptions, 
                     responsive: true, 
                     maintainAspectRatio: false, 
-                    maxBarThickness: 30, // Reduced max thickness
+                    maxBarThickness: 30, 
                     
                     interaction: { 
                         mode: 'nearest', 
@@ -1038,7 +1102,7 @@
             Object.entries(faults).sort((a,b)=>b[1]-a[1]).forEach(([f,c])=>{
                 let icon='fa-exclamation-circle';
                 for(const [k,v] of Object.entries(ICONS))if(f.includes(k))icon=v;
-                fList.innerHTML+=`<div class="fault-pill ${filters['Fault']===f?'active':''}" onclick="toggleFilter('Fault','${f}')"><span><i class="fas ${icon}" style="color:var(--accent-teal); margin-right:5px"></i>${f}</span><b>${c}</b></div>`;
+                fList.innerHTML+=`<div class="fault-pill ${filters['Fault']===f?'active':''}" onclick="toggleFilter('Fault','${f}')"><span><i class="fas ${icon}" style="color:var(--c-teal); margin-right:5px"></i>${f}</span><b>${c}</b></div>`;
             });
 
             const buckets={'0-15 Days':0,'15-30 Days':0,'30-60 Days':0,'> 60 Days':0};
@@ -1076,8 +1140,8 @@
             filteredData.slice(0,50).forEach(r=>{
                 let trendIcon = '';
                 const trendVal = (r.Trend || '').toLowerCase();
-                if(trendVal.includes('increas')) trendIcon = '<i class="fas fa-arrow-trend-up" style="color:var(--accent-red); margin-left:5px;" title="Increasing"></i>';
-                else if(trendVal.includes('decreas')) trendIcon = '<i class="fas fa-arrow-trend-down" style="color:var(--accent-green); margin-left:5px;" title="Decreasing"></i>';
+                if(trendVal.includes('increas')) trendIcon = '<i class="fas fa-arrow-trend-up" style="color:var(--c-red); margin-left:5px;" title="Increasing"></i>';
+                else if(trendVal.includes('decreas')) trendIcon = '<i class="fas fa-arrow-trend-down" style="color:var(--c-green); margin-left:5px;" title="Decreasing"></i>';
                 else if(trendVal.includes('stable')) trendIcon = '<i class="fas fa-minus" style="color:#64748b; margin-left:5px;" title="Stable"></i>';
 
                 tbody.innerHTML+=`
