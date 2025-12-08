@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
     <title>MTR Analytics Suite</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -16,14 +15,14 @@
     <style>
         :root {
             /* --- MODERN THEME PALETTE --- */
-            --bg-body: #f1f5f9; /* Softer gray/blue background */
+            --bg-body: #f1f5f9; 
             --bg-sidebar: #0f172a;
             --bg-card: #ffffff;
             --text-main: #334155;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
             
-            /* Modern Gradients (Used in CSS & JS) */
+            /* Modern Gradients */
             --grad-teal: linear-gradient(135deg, #2dd4bf 0%, #0d9488 100%);
             --grad-red: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
             --grad-green: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
@@ -31,7 +30,7 @@
             --grad-yellow: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
             --grad-purple: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
             
-            /* Solid Colors for Text */
+            /* Solid Colors */
             --c-teal: #0d9488;
             --c-red: #dc2626;
             --c-green: #16a34a;
@@ -52,7 +51,6 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
-        /* Custom Scrollbar for inner elements */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 3px; }
@@ -123,7 +121,6 @@
 
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; width: 100%; }
         
-        /* Modern Top Bar */
         .top-bar { background: var(--bg-card); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05); position: relative; z-index: 40; flex-shrink: 0; }
         .toggle-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-muted); padding: 5px; margin-right: 10px; }
         .page-header-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-right: 15px; white-space: nowrap; border-left: 2px solid var(--border-color); padding-left: 15px; letter-spacing: -0.5px; }
@@ -134,12 +131,9 @@
         .filters-active { display: flex; gap: 6px; margin-left: 10px; overflow-x: auto; white-space: nowrap; max-width: 50vw; padding-bottom: 2px; }
         .filter-tag { background: var(--grad-teal); color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(13, 148, 136, 0.2); }
 
-        /* KPI MODERN CARDS */
         .top-stats-container { display: flex; gap: 10px; padding: 15px 20px 5px 20px; flex-wrap: wrap; align-items: stretch; flex-shrink: 0; background-color: var(--bg-body); z-index: 30; }
         .kpi-row { flex-grow: 1; display: flex; gap: 10px; flex-wrap: wrap; }
         .kpi-card { flex: 1 1 130px; background: var(--bg-card); border-radius: 12px; padding: 12px 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); cursor: pointer; border: 1px solid transparent; transition: all 0.25s ease; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; min-width: 120px; }
-        
-        /* KPI Hover Lift */
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04); }
 
         .kpi-card.active.k-gen { border-color: #94a3b8; background: linear-gradient(to bottom right, var(--bg-card), #f8fafc); }
@@ -148,10 +142,8 @@
         .kpi-card.active.k-pend { border-color: var(--c-red); background: linear-gradient(to bottom right, var(--bg-card), #fef2f2); }
         .kpi-card.active.k-plan { border-color: var(--c-blue); background: linear-gradient(to bottom right, var(--bg-card), #eff6ff); }
         
-        /* Dark mode adjustments for gradients */
         body.dark-mode .kpi-card.active { background: var(--bg-card); }
 
-        /* KPI Text Colors */
         .k-gen .kpi-num, .k-gen .kpi-icon { color: #64748b; }
         .k-comp .kpi-num, .k-comp .kpi-icon { color: var(--c-green); }
         .k-open .kpi-num, .k-open .kpi-icon { color: var(--c-yellow); }
@@ -162,7 +154,6 @@
         .kpi-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.5px; }
         .kpi-num { font-size: 1.6rem; font-weight: 800; line-height: 1; letter-spacing: -1px; }
         
-        /* Modern Glassy Icon Circle */
         .kpi-icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: rgba(0,0,0,0.04); }
         .k-gen .kpi-icon-circle { background: #f1f5f9; }
         .k-comp .kpi-icon-circle { background: #dcfce7; }
@@ -183,44 +174,34 @@
         .view-section.active-view { display: block; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- DASHBOARD GRID SYSTEM --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding-bottom: 20px; }
         .d-card { background: var(--bg-card); border-radius: 12px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.04); border: 1px solid var(--border-color); display: flex; flex-direction: column; min-width: 0; width: 100%; height: 100%; transition: transform 0.2s; }
-        .d-card:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(0,0,0,0.08); }
+        .d-card:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04); }
         
         .card-head { font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; display:flex; justify-content:space-between; align-items:center; }
         .card-head small { font-weight:400; color:var(--text-muted); }
 
         .chart-box { position: relative; width: 100%; flex-grow: 1; min-height: 0; } 
-        canvas { width: 100% !important; height: 100% !important; }
+        canvas { width: 100%; height: 100%; }
         .cb-standard { height: 135px; } 
-        /* The Tall height is specifically calculated to match stacked charts */
         .cb-tall { height: 300px; } 
 
-        /* --- GRID AREAS --- */
         .a-dept { grid-column: span 2; }
         .a-cat { grid-column: span 1; }
         .a-equip { grid-column: span 1; }
-
         .a-crit { grid-column: span 1; }
         .a-age { grid-column: span 1; }
         .a-act-taken { grid-column: span 1; }
         .a-top-equip { grid-column: span 1; grid-row: span 2; }
-
         .a-fault { grid-column: span 1; }
         .a-closed-under { grid-column: span 1; }
         .a-top-area { grid-column: span 1; }
-
-        /* --- BOTTOM CHARTS: INCREASED HEIGHT --- */
         .a-trend { grid-column: span 2; } 
         .a-saved { grid-column: span 2; } 
-        /* Override default height for bottom summary charts */
-        .a-trend .cb-standard, .a-saved .cb-standard { height: 300px; } /* MATCHES DEPARTMENT WISE (Tall) */
-
+        .a-trend .cb-standard, .a-saved .cb-standard { height: 300px; }
         .a-list { grid-column: span 4; height: 400px; overflow: hidden; } 
         .a-list > div[style*="overflow-y:auto"] { flex-grow: 1; }
 
-        /* Internal Components */
         .fault-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; height: 100px; overflow-y: auto; padding-right:4px; }
         .fault-pill { background: var(--bg-body); border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 6px; display: flex; justify-content: space-between; font-size: 0.75rem; cursor: pointer; color: var(--text-main); transition:0.2s; }
         .fault-pill:hover, .fault-pill.active { background: rgba(13, 148, 136, 0.1); border-color: var(--c-teal); color: var(--c-teal); }
@@ -234,10 +215,15 @@
         td { padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
         tr:hover td { background-color: var(--bg-body); }
 
-        .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: auto; display: flex; align-items: center; justify-content: center; width: 70%; height: 70%; border-radius: 50%; z-index: 10; } 
+        .donut-center { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            text-align: center; 
+            /* FIX 1: Allow clicks to pass through text to the chart (Fixes Donut Tooltip) */
+            pointer-events: none; 
+            display: flex; align-items: center; justify-content: center; width: 70%; height: 70%; border-radius: 50%; z-index: 10; 
+        } 
         .dc-val { font-size: 1.4rem; font-weight: 800; color: var(--text-main); line-height: 1; text-align: center; }
 
-        /* TIMELINE STYLES */
         .timeline-wrapper { padding: 0 15px 30px 15px; }
         .tl-controls { display: flex; gap: 10px; margin-bottom: 15px; background: var(--bg-card); padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .tl-select { padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; flex-grow: 1; font-size: 0.9rem; background: var(--bg-body); color: var(--text-main); outline:none; }
@@ -250,11 +236,82 @@
         .tl-content { padding: 15px; background-color: var(--bg-card); position: relative; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--c-teal); }
         .tl-item.critical .tl-content { border-left-color: var(--c-red); }
         .tl-item.marginal .tl-content { border-left-color: var(--c-yellow); }
+        .tl-date { font-weight: 700; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 5px; display:flex; justify-content:space-between; }
+        .tl-obs { font-weight: 600; color: var(--text-main); margin-bottom: 5px; font-size: 1rem; }
+        .tl-rec { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-style: italic; }
+        .tl-action-box { background: rgba(13, 148, 136, 0.1); padding: 8px; border-radius: 4px; border: 1px solid var(--accent-teal); margin-top: 10px; }
+        .tl-action-date { font-size: 0.7rem; color: var(--accent-teal); font-weight: 700; margin-bottom: 2px; text-transform: uppercase; }
+        .tl-action-text { font-size: 0.85rem; color: var(--text-main); }
+
         
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
         .modal-box { background: var(--bg-card); padding: 30px; border-radius: 12px; width: 450px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); color: var(--text-main); }
         .map-row { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; font-size: 0.9rem; }
         .btn-save { width:100%; background: var(--grad-teal); color: white; border: none; padding: 12px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(13, 148, 136, 0.3); }
+
+        /* NEW STYLES FOR SPLIT CARD LAYOUT */
+        .split-card-body {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            overflow: hidden;
+            padding-top: 5px;
+        }
+
+        /* Custom Interactive Legend */
+        .legend-box {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-left: 10px;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .legend-item:hover {
+            background: rgba(0,0,0,0.05);
+            transform: translateX(2px);
+        }
+
+        .legend-item.active {
+            background: rgba(13, 148, 136, 0.1); 
+            border-color: var(--c-teal); 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .legend-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+            flex-grow: 1;
+        }
+
+        .legend-label { font-weight: 600; color: var(--text-main); font-size: 0.75rem; }
+        .legend-sub { font-size: 0.65rem; color: var(--text-muted); opacity: 0.8; }
+
+        .cb-split { width: 55%; height: 100%; position: relative; }
+        body.dark-mode .legend-item:hover { background: rgba(255,255,255,0.05); }
         
         @media (max-width: 1200px) {
             .dashboard-grid { grid-template-columns: 1fr 1fr; }
@@ -423,13 +480,18 @@
                         <div class="card-head">Fault Type</div>
                         <div class="fault-grid" id="faultList"></div>
                     </div>
+                    
                     <div class="d-card a-closed-under">
                         <div class="card-head">Diagnosis Accuracy</div>
-                        <div class="chart-box cb-standard">
-                            <canvas id="cClosedUnder"></canvas>
-                            <div class="donut-center"><div class="dc-val" id="valClosedUnder">0</div></div>
+                        <div class="split-card-body">
+                            <div class="chart-box cb-split">
+                                <canvas id="cClosedUnder"></canvas>
+                                <div class="donut-center"><div class="dc-val" id="valClosedUnder">0</div></div>
+                            </div>
+                            <div id="legendClosedUnder" class="legend-box"></div>
                         </div>
                     </div>
+
                     <div class="d-card a-top-area">
                         <div class="card-head">Top 5 Abnormal Areas</div>
                         <div class="chart-box cb-standard"><canvas id="cTopArea"></canvas></div>
@@ -491,7 +553,6 @@
         
         Chart.register(ChartDataLabels);
 
-        // Modern Gradients helper
         function getGradient(ctx, colorStart, colorEnd) {
             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
             gradient.addColorStop(0, colorStart);
@@ -583,7 +644,7 @@
                 }
                 r._drs=(r['DRS Status']||'').trim();
                 r._act=(r['Action Status']||'').trim();
-                r['Closed Under'] = (r['Closed Under']||'').trim();
+                r['Closed Under'] = (r['Closed Under']||'').trim().toUpperCase(); 
                 r._saved = parseFloat(r['Hours Saved']) || 0; 
 
                 r._zone = (r['ZONE'] && r['ZONE'].trim()) ? r['ZONE'].trim().toUpperCase() : (manualZoneMap[r.Plant] || 'OTHER');
@@ -690,13 +751,9 @@
             const txtColor = isDark ? '#cbd5e1' : '#475569';
             Chart.defaults.color = txtColor;
             Chart.defaults.borderColor = isDark ? '#334155' : '#e2e8f0';
-            
-            // Global Animation
             Chart.defaults.animation = { duration: 1000, easing: 'easeOutQuart' };
 
             const plants=[...new Set(data.map(r=>r.Plant))];
-            
-            // Helper for gradients in loops
             const ctxDept = document.getElementById('cDept').getContext('2d');
             
             drawChart('cDept', 'bar', {
@@ -759,7 +816,6 @@
             const actionTakenNames = actionTakenRows.map(r => r['Equipment Name'] || 'Unknown');
             
             document.getElementById('valActTaken').innerText=taken;
-
             const centerEl = document.getElementById('valActTaken');
             const centerDiv = centerEl.parentElement; 
             const showNames = () => {
@@ -803,7 +859,6 @@
                 return da.localeCompare(db);
             }).slice(-7);
             
-            // Create Context for Gradient Lines
             const ctxTrend = document.getElementById('cTrend').getContext('2d');
             const gradBlue = ctxTrend.createLinearGradient(0,0,0,300);
             gradBlue.addColorStop(0, 'rgba(37, 99, 235, 0.5)');
@@ -825,9 +880,64 @@
                         borderColor: '#16a34a', backgroundColor: gradGreen, fill: true, tension: 0.4
                     }
                 ]
-            }, null, { plugins: { legend: { display: true, position: 'bottom' } } });
+            }, null, { 
+                plugins: { 
+                    // CUSTOM LEGEND LOGIC: Click "Generated" -> Shows ONLY Generated (hides Closed)
+                    legend: { 
+                        display: true, 
+                        position: 'bottom',
+                        onClick: (e, legendItem, legend) => {
+                            const index = legendItem.datasetIndex;
+                            const ci = legend.chart;
+                            if (ci.isDatasetVisible(index)) {
+                                // If visible, check if it's the ONLY one visible
+                                const othersVisible = ci.data.datasets.some((d, i) => i !== index && ci.isDatasetVisible(i));
+                                if (!othersVisible) {
+                                    // If it's the only one, show ALL (reset)
+                                    ci.data.datasets.forEach((d, i) => ci.setDatasetVisibility(i, true));
+                                } else {
+                                    // If others are visible, hide them and keep ONLY this one (ISOLATE)
+                                    ci.data.datasets.forEach((d, i) => ci.setDatasetVisibility(i, i === index));
+                                }
+                            } else {
+                                // If hidden, show it (and maybe others? No, let's just show it)
+                                ci.setDatasetVisibility(index, true);
+                            }
+                            ci.update();
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                // Hover configuration (Index mode for shared tooltips)
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                // Click configuration (Nearest mode to detect which line was clicked)
+                onClick: (e, elements, chart) => {
+                    const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: false }, true);
+                    
+                    if (!points || points.length === 0) return;
+                    
+                    const firstPoint = points[0];
+                    const datasetIndex = firstPoint.datasetIndex;
+                    const index = firstPoint.index;
+                    const dateValue = chart.data.labels[index];
+                    
+                    // Dataset 0 = Generated -> Filter by Date
+                    // Dataset 1 = Closed -> Filter by Action Taken Date
+                    const filterKey = (datasetIndex === 0) ? 'Date' : 'Action Taken Date';
 
-            // Top 10 Bad Actors (NO GRID)
+                    setTimeout(() => {
+                        toggleFilter(filterKey, dateValue);
+                    }, 0);
+                }
+            });
+
+            // Top 10 Bad Actors
             const eqCounts = {};
             data.filter(r => r._drs !== 'Completed').forEach(r => {
                 const n = r['Equipment Name']; if(n) eqCounts[n] = (eqCounts[n] || 0) + 1;
@@ -869,7 +979,7 @@
                 } 
             });
 
-            // Top 5 Abnormal Areas (NO GRID)
+            // Top 5 Abnormal Areas
             const areaCounts = {};
             data.forEach(r => {
                 const area = r.Area ? r.Area.trim() : 'Unknown';
@@ -915,12 +1025,12 @@
                 }
             });
 
-            // Diagnosis Accuracy
+            // --- DIAGNOSIS ACCURACY (Updated) ---
             const closedUnderCounts = { 'TP': 0, 'FP': 0, 'FN': 0 };
             let totalClosedUnder = 0;
             data.forEach(r => {
                 if (r['Closed Under']) {
-                    const status = r['Closed Under'].toUpperCase(); 
+                    const status = r['Closed Under']; 
                     if (closedUnderCounts[status] !== undefined) {
                         closedUnderCounts[status]++;
                         totalClosedUnder++;
@@ -929,35 +1039,52 @@
             });
             document.getElementById('valClosedUnder').innerText = totalClosedUnder;
 
+            const diagColors = { 'TP': '#16a34a', 'FP': '#d97706', 'FN': '#dc2626' };
+            const diagLabels = ['True Positive (TP)', 'False Positive (FP)', 'False Negative (FN)'];
+            const diagKeys = ['TP', 'FP', 'FN'];
+            const diagData = [closedUnderCounts['TP'], closedUnderCounts['FP'], closedUnderCounts['FN']];
+
             drawChart('cClosedUnder', 'doughnut', {
-                labels: ['True Positive (TP)', 'False Positive (FP)', 'False Negative (FN)'],
+                labels: diagLabels,
                 datasets: [{
-                    data: [closedUnderCounts['TP'], closedUnderCounts['FP'], closedUnderCounts['FN']],
-                    backgroundColor: ['#16a34a', '#d97706', '#dc2626'],
-                    borderWidth: 0
+                    data: diagData,
+                    backgroundColor: [diagColors.TP, diagColors.FP, diagColors.FN],
+                    borderWidth: 0,
+                    hoverOffset: 4
                 }]
             }, 'Closed Under', { 
-                filterValues: ['TP', 'FP', 'FN'], 
+                filterValues: diagKeys,
                 plugins: {
-                    datalabels: {
-                        color: '#fff',
-                        font: { weight: 'bold' },
-                        formatter: (value, ctx) => {
-                            let sum = 0;
-                            let dataArr = ctx.chart.data.datasets[0].data;
-                            dataArr.map(data => { sum += data; });
-                            if (sum === 0) return "";
-                            let percentage = (value * 100 / sum).toFixed(1) + "%";
-                            return value + '\n(' + percentage + ')';
-                        }
-                    }
+                    legend: { display: false }, // Hide default legend
+                    datalabels: { display: false }, // Hide text on chart
+                    tooltip: { enabled: true }
                 }
+            });
+
+            // Custom Interactive Legend
+            const legendContainer = document.getElementById('legendClosedUnder');
+            legendContainer.innerHTML = '';
+
+            diagKeys.forEach((key, index) => {
+                const count = diagData[index];
+                const pct = totalClosedUnder > 0 ? ((count / totalClosedUnder) * 100).toFixed(1) + '%' : '0%';
+                const isActive = filters['Closed Under'] === key ? 'active' : '';
+
+                legendContainer.innerHTML += `
+                    <div class="legend-item ${isActive}" onclick="toggleFilter('Closed Under', '${key}')">
+                        <div class="legend-dot" style="background: ${diagColors[key]}"></div>
+                        <div class="legend-info">
+                            <span class="legend-label">${key}</span>
+                            <span class="legend-sub">${pct} Accuracy</span>
+                        </div>
+                        <div class="legend-val">${count}</div>
+                    </div>
+                `;
             });
             
             renderSavedChart();
         }
 
-        // New function to handle FY filtering logic for just the Saved Chart
         function renderSavedChart() {
             const selectedFY = document.getElementById('optFY').value;
             const fyData = filteredData.filter(r => r._fy === selectedFY && r._saved > 0);
@@ -983,7 +1110,6 @@
             const isDark = document.body.classList.contains('dark-mode');
             const txtColor = isDark ? '#cbd5e1' : '#475569';
             
-            // Gradient purple
             const gradPurple = ctx.createLinearGradient(0,0,0,400);
             gradPurple.addColorStop(0, '#a78bfa');
             gradPurple.addColorStop(1, '#7c3aed');
@@ -999,7 +1125,6 @@
                         borderRadius: 4
                     }]
                 },
-                plugins: [ChartDataLabels],
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -1021,19 +1146,73 @@
             });
         }
 
-
-        function drawChart(id, type, data, filterKey, extraOptions={}){
+        // FIXED DRAWCHART FUNCTION TO MATCH OLD LOGIC
+        function drawChart(id, type, data, filterKey, extraOptions = {}) {
             const ctx = document.getElementById(id).getContext('2d');
-            if(charts[id]) charts[id].destroy();
+            if (charts[id]) charts[id].destroy();
 
-            const defaultScales = (type === 'doughnut') ? {} : {
-                x: { display: extraOptions.indexAxis !== 'y', grid: { display:false } },
-                y: { display: extraOptions.indexAxis === 'y', grid: { display:false } }
+            // Base Config
+            const config = {
+                type: type,
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    maxBarThickness: 30,
+                    interaction: extraOptions.interaction || {
+                        mode: 'nearest',
+                        axis: extraOptions.indexAxis === 'y' ? 'y' : 'x',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { display: type !== 'bar' && type !== 'doughnut' },
+                        tooltip: { enabled: true }, // Ensure tooltips are enabled
+                        datalabels: {
+                            color: document.body.classList.contains('dark-mode') ? '#fff' : '#333',
+                            font: { weight: 'bold', size: 10 },
+                            display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0,
+                            align: type === 'line' ? 'top' : 'center',
+                            formatter: (v) => v
+                        }
+                    },
+                    scales: (type === 'doughnut') ? {} : {
+                        x: { display: extraOptions.indexAxis !== 'y', grid: { display: false } },
+                        y: { display: extraOptions.indexAxis === 'y', grid: { display: false } }
+                    },
+                    onClick: extraOptions.onClick, // Specific chart click
+                    onHover: extraOptions.onHover
+                }
             };
-            
-            const scales = extraOptions.scales || defaultScales;
 
-            // Merge "barPercentage: 0.9" and "categoryPercentage: 0.9" if not provided
+            // Manual Deep Merge for Plugins
+            if (extraOptions.plugins) {
+                if (extraOptions.plugins.legend) config.options.plugins.legend = { ...config.options.plugins.legend, ...extraOptions.plugins.legend };
+                if (extraOptions.plugins.tooltip) config.options.plugins.tooltip = { ...config.options.plugins.tooltip, ...extraOptions.plugins.tooltip };
+                if (extraOptions.plugins.datalabels) config.options.plugins.datalabels = { ...config.options.plugins.datalabels, ...extraOptions.plugins.datalabels };
+            }
+            
+            // Other overrides
+            if (extraOptions.scales) config.options.scales = extraOptions.scales;
+            if (extraOptions.layout) config.options.layout = extraOptions.layout;
+            if (extraOptions.indexAxis) config.options.indexAxis = extraOptions.indexAxis;
+
+            // Default click handler if none provided
+            if (!config.options.onClick && filterKey) {
+                config.options.onClick = (e, elements) => {
+                    if (elements.length) {
+                        const idx = elements[0].index;
+                        const val = extraOptions.filterValues ? extraOptions.filterValues[idx] : data.labels[idx];
+                        setTimeout(() => toggleFilter(filterKey, val), 0);
+                    }
+                };
+            }
+
+            // Hover cursor
+            config.options.onHover = (e, el) => {
+                e.native.target.style.cursor = el[0] ? 'pointer' : 'default';
+                if (extraOptions.onHover) extraOptions.onHover(e, el);
+            };
+
             if (type === 'bar') {
                 data.datasets.forEach(ds => {
                    if(ds.barPercentage === undefined) ds.barPercentage = 0.9;
@@ -1041,51 +1220,7 @@
                 });
             }
 
-            charts[id] = new Chart(ctx, {
-                type: type, 
-                data: data, 
-                plugins: [ChartDataLabels],
-                options: {
-                    ...extraOptions, 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    maxBarThickness: 30, 
-                    
-                    interaction: { 
-                        mode: 'nearest', 
-                        axis: extraOptions.indexAxis === 'y' ? 'y' : 'x', 
-                        intersect: true 
-                    },
-
-                    plugins: {
-                        legend: { display: type !== 'bar' && type !== 'doughnut' },
-                        datalabels: {
-                            color: document.body.classList.contains('dark-mode') ? '#fff' : '#333',
-                            font: { weight: 'bold', size: 10 },
-                            display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0,
-                            align: type === 'line' ? 'top' : 'center',
-                            formatter: (v) => v
-                        },
-                        ...(extraOptions.plugins || {})
-                    },
-                    scales: scales,
-                    
-                    onClick: (e, el) => {
-                        if (el.length && filterKey) {
-                            const idx = el[0].index;
-                            const valueToFilter = (extraOptions.filterValues) 
-                                ? extraOptions.filterValues[idx] 
-                                : data.labels[idx];
-                            
-                            toggleFilter(filterKey, valueToFilter); 
-                        }
-                    },
-                    onHover: (e, el) => {
-                        e.native.target.style.cursor = el[0] ? 'pointer' : 'default';
-                        if(extraOptions.onHover) extraOptions.onHover(e, el);
-                    }
-                }
-            });
+            charts[id] = new Chart(ctx, config);
         }
 
         function renderWidgets(){
@@ -1197,7 +1332,6 @@
             localStorage.setItem('mtr_manual_map',JSON.stringify(manualZoneMap)); closeSettings(); processData(); renderSidebar(); applyFilters();
         }
 
-        // Timeline Logic
         function initTimelineFilters() {
             const plants = [...new Set(rawData.map(r => r.Plant))].sort();
             const pSelect = document.getElementById('tl-plant');
@@ -1240,7 +1374,6 @@
             });
         }
 
-        // PDF Export
         async function exportPDF() {
             document.body.classList.add('print-mode');
             window.dispatchEvent(new Event('resize'));
