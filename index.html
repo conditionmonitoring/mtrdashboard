@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,331 +7,301 @@
     <title>MTR Analytics Suite</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* --- MODERN THEME PALETTE --- */
-            --bg-body: #f1f5f9; 
-            --bg-sidebar: #0f172a;
+            /* --- MODERN THEME VARIABLES --- */
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+
+            /* Light Mode */
+            --bg-body: #f1f5f9;       
+            --bg-sidebar: #ffffff;
             --bg-card: #ffffff;
-            --text-main: #334155;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
+            --bg-glass: rgba(255, 255, 255, 0.8);
             
-            /* Modern Gradients */
-            --grad-teal: linear-gradient(135deg, #2dd4bf 0%, #0d9488 100%);
-            --grad-red: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
-            --grad-green: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
-            --grad-blue: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
-            --grad-yellow: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            --grad-purple: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+            --text-main: #1e293b;     
+            --text-muted: #64748b;    
             
-            /* Solid Colors */
-            --c-teal: #0d9488;
-            --c-red: #dc2626;
-            --c-green: #16a34a;
-            --c-blue: #2563eb;
-            --c-yellow: #d97706;
-            --c-purple: #7c3aed;
+            --border-color: #e2e8f0;  
+            --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            
+            /* Accents */
+            --accent-teal: #14b8a6;      --accent-teal-soft: #ccfbf1; 
+            --accent-blue: #3b82f6;      --accent-blue-soft: #dbeafe; 
+            --accent-red: #f43f5e;       --accent-red-soft: #ffe4e6;  
+            --accent-green: #10b981;     --accent-green-soft: #d1fae5;
+            --accent-amber: #f59e0b;     --accent-amber-soft: #fef3c7;
+            --accent-purple: #8b5cf6;    --accent-purple-soft:#ede9fe;
+            --accent-slate: #64748b;     --accent-slate-soft: #f1f5f9;
         }
 
-        /* --- DARK MODE OVERRIDES --- */
+        /* Dark Mode */
         body.dark-mode {
-            --bg-body: #020617; 
-            --bg-sidebar: #0f172a;
+            --bg-body: #0f172a;       
+            --bg-sidebar: #1e293b;    
             --bg-card: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
+            --bg-glass: rgba(30, 41, 59, 0.85);
+
+            --text-main: #f8fafc;     
+            --text-muted: #94a3b8;    
+            
+            --border-color: #334155;  
+            --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+
+            --accent-teal-soft: rgba(20, 184, 166, 0.15);
+            --accent-blue-soft: rgba(59, 130, 246, 0.15);
+            --accent-red-soft: rgba(244, 63, 94, 0.15);
+            --accent-green-soft: rgba(16, 185, 129, 0.15);
+            --accent-amber-soft: rgba(245, 158, 11, 0.15);
+            --accent-purple-soft: rgba(139, 92, 246, 0.15);
+            --accent-slate-soft: rgba(148, 163, 184, 0.15);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+        *::-webkit-scrollbar { width: 6px; height: 6px; }
+        *::-webkit-scrollbar-track { background: transparent; }
+        *::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8); }
-
         body { 
-            display: flex; 
-            background-color: var(--bg-body); 
-            height: 100dvh; 
-            overflow: hidden; 
-            font-size: 11.5px; 
-            color: var(--text-main); 
-            transition: background-color 0.3s, color 0.3s;
+            display: flex; background-color: var(--bg-body); height: 100dvh; overflow: hidden; 
+            font-size: 14px; color: var(--text-main); 
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* --- PRINT MODE --- */
-        body.print-mode { background: white !important; color: black !important; height: auto !important; overflow: visible !important; }
+        /* Print Mode */
+        body.print-mode { background: white !important; height: auto !important; overflow: visible !important; }
         body.print-mode .sidebar, body.print-mode .top-bar, body.print-mode .tl-controls { display: none !important; }
         body.print-mode .main { width: 1200px !important; margin: 0 auto; overflow: visible; height: auto; }
-        body.print-mode .dashboard-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
-        body.print-mode .d-card, body.print-mode .kpi-card { box-shadow: none !important; border: 1px solid #ccc !important; }
-        body.print-mode .a-dept, body.print-mode .a-trend, body.print-mode .a-list, body.print-mode .a-saved { grid-column: span 3 !important; }
-        body.print-mode .a-top-equip { grid-row: span 1 !important; }
-        body.print-mode .chart-box { height: 200px !important; } 
-        body.print-mode .cb-tall { height: 200px !important; }
+        body.print-mode .dashboard-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 15px !important; }
+        body.print-mode .d-card, body.print-mode .kpi-card { background: white !important; border: 1px solid #ccc !important; box-shadow: none !important; }
 
-        /* --- UI STYLES --- */
-        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; opacity: 0; transition: opacity 0.3s; }
+        /* UI Elements */
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 90; opacity: 0; transition: opacity 0.3s; }
         .sidebar-overlay.active { display: block; opacity: 1; }
 
-        .sidebar { width: 250px; background-color: var(--bg-sidebar); color: white; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); flex-shrink: 0; z-index: 100; height: 100dvh; border-right: 1px solid rgba(255,255,255,0.05); }
+        .sidebar { 
+            width: 280px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            flex-shrink: 0; z-index: 100; height: 100dvh; 
+        }
         .sidebar.desktop-closed { width: 0; overflow: hidden; border: none; }
-        .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 5px; min-width: 250px; flex-shrink: 0; }
-        .sidebar-logo { max-height: 40px; max-width: 160px; object-fit: contain; }
-        .sidebar-close-btn { background: rgba(255,255,255,0.05); border: none; color: #94a3b8; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .sidebar-close-btn:hover { background: rgba(255,255,255,0.1); color: white; }
         
-        .nav-section { padding: 10px 12px; }
-        .nav-label { font-size: 0.65rem; font-weight: 700; color: #64748b; margin: 10px 0 5px 8px; text-transform: uppercase; letter-spacing: 1.2px; }
-        .nav-item { padding: 10px 12px; margin-bottom: 4px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #94a3b8; font-weight: 500; font-size: 0.85rem; transition: all 0.2s ease; border: 1px solid transparent; }
-        .nav-item:hover { background: rgba(255,255,255,0.08); color: white; transform: translateX(4px); }
-        .nav-item.active { background: var(--grad-teal); color: white; font-weight: 600; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3); border: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 20px; margin-bottom: 10px; flex-shrink: 0; }
+        .sidebar-logo { max-height: 40px; max-width: 180px; object-fit: contain; }
+        .sidebar-close-btn { background: transparent; border: none; color: var(--text-muted); width: 32px; height: 32px; cursor: pointer; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .sidebar-close-btn:hover { background: var(--bg-body); color: var(--text-main); }
+
+        .nav-section { padding: 0 20px; flex-shrink: 0; }
+        .nav-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin: 20px 0 10px 0px; text-transform: uppercase; letter-spacing: 0.05em; }
         
-        .sidebar-content { padding: 0 12px 15px 12px; overflow-y: auto; flex-grow: 1; }
-        .sidebar-footer { margin-top: auto; padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); background-color: var(--bg-sidebar); }
-        .side-btn { width: 100%; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; transition: 0.2s; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .btn-upload-side { background: var(--grad-teal); color: white; }
-        .btn-upload-side:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .btn-reset-side { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
-        .btn-reset-side:hover { background: rgba(239, 68, 68, 0.2); }
-        .footer-credits { text-align: center; color: #64748b; font-size: 0.6rem; margin-top: 10px; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 10px; }
-        .dev-name { color: var(--c-teal); font-weight: 600; }
+        .nav-item { 
+            padding: 12px 16px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; 
+            display: flex; align-items: center; gap: 14px; 
+            color: var(--text-muted); font-weight: 500; font-size: 0.95rem; transition: all 0.2s ease; 
+        }
+        .nav-item:hover { background: var(--bg-body); color: var(--text-main); }
+        .nav-item.active { background: var(--accent-teal); color: white; box-shadow: 0 4px 15px -3px rgba(20, 184, 166, 0.4); }
+        .nav-item i { width: 20px; text-align: center; }
 
-        .filter-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; margin-bottom: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.2s; position: relative; overflow: hidden; }
-        .filter-card:hover { background: rgba(255,255,255,0.08); transform: translateX(2px); }
-        .unit-card.active { border-color: var(--c-blue); background: rgba(37, 99, 235, 0.15); }
-        .unit-card.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--c-blue); }
-        .zone-card.active { border-color: var(--c-teal); background: rgba(13, 148, 136, 0.15); }
-        .zone-card.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--c-teal); }
+        .sidebar-content { padding: 0 20px 20px 20px; overflow-y: auto; flex-grow: 1; }
+        .sidebar-footer { margin-top: auto; padding: 20px; border-top: 1px solid var(--border-color); flex-shrink: 0; background-color: var(--bg-sidebar); }
         
-        .icon-box { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-right: 10px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .zone-iron .icon-box { background: var(--grad-red); color: white; }
-        .zone-steel .icon-box { background: var(--grad-blue); color: white; }
-        .zone-process .icon-box { background: var(--grad-green); color: white; }
-        .unit-icon { color: var(--c-blue); }
-        .card-name { font-weight: 500; font-size: 0.8rem; display: block; color: #e2e8f0; }
-        .card-count { font-size: 0.65rem; opacity: 0.6; }
-
-        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; width: 100%; }
+        .side-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; transition: 0.2s; font-size: 0.9rem; }
+        .btn-upload-side { background: var(--text-main); color: var(--bg-card); }
+        .btn-upload-side:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-reset-side { background: var(--accent-red-soft); color: var(--accent-red); }
+        .btn-reset-side:hover { background: var(--accent-red); color: white; }
         
-        .top-bar { background: var(--bg-card); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05); position: relative; z-index: 40; flex-shrink: 0; }
-        .toggle-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-muted); padding: 5px; margin-right: 10px; }
-        .page-header-title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-right: 15px; white-space: nowrap; border-left: 2px solid var(--border-color); padding-left: 15px; letter-spacing: -0.5px; }
-        .settings-btn, .export-btn, .theme-btn { background:var(--bg-body); width:32px; height:32px; border-radius:8px; border:1px solid var(--border-color); cursor:pointer; font-size:0.9rem; color: var(--text-muted); margin-left:8px; display:flex; align-items:center; justify-content:center; transition:0.2s; }
-        .settings-btn:hover, .export-btn:hover, .theme-btn:hover { color: var(--c-teal); border-color: var(--c-teal); background: rgba(13, 148, 136, 0.05); transform: translateY(-1px); }
+        .footer-credits { text-align: center; color: var(--text-muted); font-size: 0.7rem; margin-top: 15px; opacity: 0.7; }
+        .dev-name { color: var(--accent-teal); font-weight: 700; }
+
+        .filter-card { background: var(--bg-body); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; transition: all 0.2s; border: 1px solid transparent; }
+        .filter-card:hover { transform: translateX(4px); background: var(--border-color); }
+        .filter-card.active { background: white; border-color: var(--accent-teal); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        body.dark-mode .filter-card.active { background: var(--bg-body); border-color: var(--accent-teal); }
         
-        .last-update { background: var(--bg-body); color: var(--text-muted); padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; margin-right: 10px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 6px; }
-        .filters-active { display: flex; gap: 6px; margin-left: 10px; overflow-x: auto; white-space: nowrap; max-width: 50vw; padding-bottom: 2px; }
-        .filter-tag { background: var(--grad-teal); color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(13, 148, 136, 0.2); }
-
-        .top-stats-container { display: flex; gap: 10px; padding: 15px 20px 5px 20px; flex-wrap: wrap; align-items: stretch; flex-shrink: 0; background-color: var(--bg-body); z-index: 30; }
-        .kpi-row { flex-grow: 1; display: flex; gap: 10px; flex-wrap: wrap; }
-        .kpi-card { flex: 1 1 130px; background: var(--bg-card); border-radius: 12px; padding: 12px 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); cursor: pointer; border: 1px solid transparent; transition: all 0.25s ease; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; min-width: 120px; }
-        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04); }
-
-        .kpi-card.active.k-gen { border-color: #94a3b8; background: linear-gradient(to bottom right, var(--bg-card), #f8fafc); }
-        .kpi-card.active.k-comp { border-color: var(--c-green); background: linear-gradient(to bottom right, var(--bg-card), #f0fdf4); }
-        .kpi-card.active.k-open { border-color: var(--c-yellow); background: linear-gradient(to bottom right, var(--bg-card), #fefce8); }
-        .kpi-card.active.k-pend { border-color: var(--c-red); background: linear-gradient(to bottom right, var(--bg-card), #fef2f2); }
-        .kpi-card.active.k-plan { border-color: var(--c-blue); background: linear-gradient(to bottom right, var(--bg-card), #eff6ff); }
+        .icon-box { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-right: 12px; flex-shrink: 0; background: white; color: var(--text-muted); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        body.dark-mode .icon-box { background: rgba(255,255,255,0.05); }
         
-        body.dark-mode .kpi-card.active { background: var(--bg-card); }
-
-        .k-gen .kpi-num, .k-gen .kpi-icon { color: #64748b; }
-        .k-comp .kpi-num, .k-comp .kpi-icon { color: var(--c-green); }
-        .k-open .kpi-num, .k-open .kpi-icon { color: var(--c-yellow); }
-        .k-pend .kpi-num, .k-pend .kpi-icon { color: var(--c-red); }
-        .k-plan .kpi-num, .k-plan .kpi-icon { color: var(--c-blue); }
-
-        .kpi-content { z-index: 2; }
-        .kpi-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.5px; }
-        .kpi-num { font-size: 1.6rem; font-weight: 800; line-height: 1; letter-spacing: -1px; }
+        .unit-card.active .icon-box { background: var(--accent-blue); color: white; }
+        .zone-card.active .icon-box { background: var(--accent-teal); color: white; }
         
-        .kpi-icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: rgba(0,0,0,0.04); }
-        .k-gen .kpi-icon-circle { background: #f1f5f9; }
-        .k-comp .kpi-icon-circle { background: #dcfce7; }
-        .k-open .kpi-icon-circle { background: #fef9c3; }
-        .k-pend .kpi-icon-circle { background: #fee2e2; }
-        .k-plan .kpi-icon-circle { background: #dbeafe; }
+        .card-name { font-weight: 600; font-size: 0.9rem; display: block; color: var(--text-main); }
+        .card-count { font-size: 0.75rem; color: var(--text-muted); }
+
+        .main { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; width: 100%; }
         
-        body.dark-mode .kpi-icon-circle { background: rgba(255,255,255,0.05); }
-
-        .issuer-card { flex: 0 0 170px; background: var(--bg-card); border-radius: 12px; padding: 10px 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: center; }
-        .issuer-header { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
-        .issuer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size:0.8rem; }
-        .issuer-val { font-size: 1rem; font-weight: 800; color: var(--text-main); }
-
-        .scroll-content { flex-grow: 1; overflow-y: auto; padding: 5px 20px 20px 20px; }
-
-        .view-section { display: none; }
-        .view-section.active-view { display: block; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding-bottom: 20px; }
-        .d-card { background: var(--bg-card); border-radius: 12px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.04); border: 1px solid var(--border-color); display: flex; flex-direction: column; min-width: 0; width: 100%; height: 100%; transition: transform 0.2s; }
-        .d-card:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04); }
+        .top-bar { 
+            background: var(--bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 16px 30px; display: flex; align-items: center; justify-content: space-between; 
+            position: sticky; top: 0; z-index: 40; flex-shrink: 0; border-bottom: 1px solid var(--border-color);
+        }
         
-        .card-head { font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; display:flex; justify-content:space-between; align-items:center; }
-        .card-head small { font-weight:400; color:var(--text-muted); }
+        .page-header-title { font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-right: 20px; letter-spacing: -0.02em; }
+        .top-icon-btn { background:transparent; border:none; cursor:pointer; font-size:1.1rem; color: var(--text-muted); margin-left:12px; padding: 8px; border-radius: 8px; transition: 0.2s; }
+        .top-icon-btn:hover { background: var(--bg-body); color: var(--accent-teal); }
+        
+        .last-update { background: var(--bg-body); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px; }
+        .last-update i { color: var(--accent-teal); }
+        
+        .filters-active { display: flex; gap: 8px; margin-left: 15px; overflow-x: auto; padding-bottom: 2px; }
+        .filter-tag { background: var(--text-main); color: var(--bg-body); padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        .top-stats-container { display: flex; gap: 20px; padding: 30px 30px 10px 30px; flex-wrap: wrap; }
+        .kpi-row { flex-grow: 1; display: flex; gap: 20px; flex-wrap: wrap; }
+        
+        .kpi-card { 
+            flex: 1 1 180px; background: var(--bg-card); border-radius: 16px; padding: 20px; 
+            box-shadow: var(--shadow-card); cursor: pointer; transition: all 0.3s;
+            position: relative; overflow: hidden; border: 1px solid transparent;
+        }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+        .kpi-card.active { border-color: currentColor; background: var(--bg-card); }
+        .kpi-card.active::after { content:''; position: absolute; inset: 0; background: currentColor; opacity: 0.05; pointer-events: none; }
+
+        .k-gen { color: var(--text-muted); } .k-gen.active { color: var(--text-main); }
+        .k-comp { color: var(--accent-green); }
+        .k-open { color: var(--accent-amber); }
+        .k-pend { color: var(--accent-red); }
+        .k-plan { color: var(--accent-blue); }
+
+        /* KPI Icons */
+        .kpi-icon-bg { 
+            position: absolute; right: 20px; top: 20px; 
+            width: 45px; height: 45px; border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.2rem;
+        }
+        .k-gen .kpi-icon-bg { background: var(--bg-body); color: var(--text-muted); }
+        .k-comp .kpi-icon-bg { background: var(--accent-green-soft); color: var(--accent-green); }
+        .k-open .kpi-icon-bg { background: var(--accent-amber-soft); color: var(--accent-amber); }
+        .k-pend .kpi-icon-bg { background: var(--accent-red-soft); color: var(--accent-red); }
+        .k-plan .kpi-icon-bg { background: var(--accent-blue-soft); color: var(--accent-blue); }
+
+        .kpi-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8; margin-bottom: 8px; }
+        .kpi-num { font-size: 2rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+        
+        .issuer-card { flex: 0 0 220px; background: var(--bg-card); border-radius: 16px; padding: 15px 20px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; justify-content: center; }
+        .issuer-header { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+        .issuer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .issuer-val { font-weight: 700; color: var(--text-main); }
+
+        .chart-split-wrapper { display: flex; align-items: center; height: 100%; padding: 0 10px; gap: 20px; }
+        .chart-split-left { position: relative; width: 45%; height: 180px; display: flex; justify-content: center; align-items: center; }
+        .chart-split-right { width: 55%; display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+        
+        .legend-item { 
+            background: var(--bg-body); border-radius: 12px; padding: 10px 14px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            cursor: pointer; transition: all 0.2s; border: 1px solid transparent; 
+        }
+        .legend-item:hover { transform: scale(1.02); }
+        .legend-item.active-filter { border-color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .legend-head { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .legend-val { font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
+
+        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px 30px 50px 30px; }
+        .d-card { background: var(--bg-card); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; min-width: 0; width: 100%; height: 100%; transition: transform 0.3s; }
+        .d-card:hover { box-shadow: var(--shadow-hover); }
+
+        .card-head { font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 20px; display:flex; justify-content:space-between; align-items: center; letter-spacing: -0.01em; }
+        .card-head small { font-weight: 400; color: var(--text-muted); font-size: 0.75rem; }
 
         .chart-box { position: relative; width: 100%; flex-grow: 1; min-height: 0; } 
-        canvas { width: 100%; height: 100%; }
-        .cb-standard { height: 135px; } 
-        .cb-tall { height: 300px; } 
+        canvas { width: 100% !important; height: 100% !important; }
+        .cb-standard { height: 260px; } .cb-tall { height: 460px; } 
 
-        .a-dept { grid-column: span 2; }
-        .a-cat { grid-column: span 1; }
-        .a-equip { grid-column: span 1; }
-        .a-crit { grid-column: span 1; }
-        .a-age { grid-column: span 1; }
-        .a-act-taken { grid-column: span 1; }
-        .a-top-equip { grid-column: span 1; grid-row: span 2; }
-        .a-fault { grid-column: span 1; }
-        .a-closed-under { grid-column: span 1; }
-        .a-top-area { grid-column: span 1; }
-        .a-trend { grid-column: span 2; } 
-        .a-saved { grid-column: span 2; } 
-        .a-trend .cb-standard, .a-saved .cb-standard { height: 300px; }
+        .a-dept { grid-column: span 2; } .a-cat { grid-column: span 1; } .a-equip { grid-column: span 1; } 
+        .a-crit { grid-column: span 1; } .a-age { grid-column: span 1; } .a-act-taken { grid-column: span 1; } 
+        .a-top-equip { grid-column: span 1; grid-row: span 2; } 
+        .a-fault { grid-column: span 1; } .a-closed-under { grid-column: span 1; } .a-top-area { grid-column: span 1; }
+        .a-trend { grid-column: span 2; } .a-saved { grid-column: span 2; } 
         .a-list { grid-column: span 4; height: 400px; overflow: hidden; } 
-        .a-list > div[style*="overflow-y:auto"] { flex-grow: 1; }
 
-        .fault-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; height: 100px; overflow-y: auto; padding-right:4px; }
-        .fault-pill { background: var(--bg-body); border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 6px; display: flex; justify-content: space-between; font-size: 0.75rem; cursor: pointer; color: var(--text-main); transition:0.2s; }
-        .fault-pill:hover, .fault-pill.active { background: rgba(13, 148, 136, 0.1); border-color: var(--c-teal); color: var(--c-teal); }
+        .view-section { display: none; }
+        .view-section.active-view { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- FIXED: Fault Grid & Badges --- */
+        .fault-grid { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; 
+            height: 100%; /* Fill container */
+            overflow-y: auto; padding-right: 5px; 
+        }
+        .fault-pill { 
+            background: var(--bg-body); padding: 8px 12px; border-radius: 8px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            font-size: 0.8rem; cursor: pointer; color: var(--text-main); 
+            font-weight: 500; transition: 0.2s; border: 1px solid transparent; 
+        }
+        .fault-pill:hover, .fault-pill.active { background: var(--accent-teal-soft); color: var(--accent-teal); }
         
-        .age-row { cursor: pointer; transition: 0.2s; color: var(--text-main); border-radius:4px; } 
-        .age-row td { padding: 6px 8px; border-bottom: 1px solid var(--border-color); }
-        .age-row.active { border: 2px solid var(--c-teal); font-weight: bold; }
+        /* Fixed Badge Contrast for Dark Mode */
+        .fault-pill b { 
+            background: rgba(0,0,0,0.08); 
+            padding: 2px 7px; border-radius: 6px; 
+            font-size: 0.75rem; color: var(--text-main); 
+        }
+        body.dark-mode .fault-pill b { 
+            background: rgba(255,255,255,0.1); 
+            color: #fff; 
+        }
+
+        .age-row { cursor: pointer; transition: 0.2s; color: var(--text-main); border-radius: 8px; } .age-row td { padding: 10px 8px; border-bottom: 1px solid var(--bg-body); }
+        .age-row:hover { background: var(--bg-body); } .age-row.active { box-shadow: inset 4px 0 0 var(--accent-teal); background: var(--bg-body); font-weight: 700; }
         
-        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.75rem; } 
-        th { text-align: left; padding: 8px; background: var(--bg-body); position: sticky; top: 0; z-index: 10; color: var(--text-muted); font-weight:600; } 
-        td { padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
-        tr:hover td { background-color: var(--bg-body); }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.85rem; } 
+        th { text-align: left; padding: 12px; background: var(--bg-body); position: sticky; top: 0; z-index: 10; color: var(--text-muted); font-weight: 600; border-bottom: 2px solid var(--border-color); } 
+        td { padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+        tr:last-child td { border-bottom: none; }
 
-        .donut-center { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            text-align: center; 
-            /* FIX 1: Allow clicks to pass through text to the chart (Fixes Donut Tooltip) */
-            pointer-events: none; 
-            display: flex; align-items: center; justify-content: center; width: 70%; height: 70%; border-radius: 50%; z-index: 10; 
-        } 
-        .dc-val { font-size: 1.4rem; font-weight: 800; color: var(--text-main); line-height: 1; text-align: center; }
+        .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; } 
+        .dc-val { font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1; letter-spacing: -0.02em; }
 
-        .timeline-wrapper { padding: 0 15px 30px 15px; }
-        .tl-controls { display: flex; gap: 10px; margin-bottom: 15px; background: var(--bg-card); padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .tl-select { padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; flex-grow: 1; font-size: 0.9rem; background: var(--bg-body); color: var(--text-main); outline:none; }
+        /* --- FIXED: Timeline Alignment --- */
+        .timeline-wrapper { padding: 20px 30px; }
+        .tl-controls { display: flex; gap: 15px; margin-bottom: 30px; background: var(--bg-card); padding: 20px; border-radius: 16px; box-shadow: var(--shadow-card); }
+        .tl-select { padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; flex-grow: 1; font-size: 0.95rem; background: var(--bg-body); color: var(--text-main); outline: none; }
         .timeline-container { position: relative; max-width: 900px; margin: 0 auto; }
-        .timeline-container::after { content: ''; position: absolute; width: 3px; background-color: var(--border-color); top: 0; bottom: 0; left: 24px; margin-left: -1px; }
-        .tl-item { padding: 10px 20px 10px 60px; position: relative; width: 100%; }
-        .tl-dot { position: absolute; width: 18px; height: 18px; left: 17px; background-color: var(--bg-card); border: 4px solid var(--c-teal); top: 15px; border-radius: 50%; z-index: 1; display:block; box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1); }
-        .tl-item.critical .tl-dot { border-color: var(--c-red); box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); }
-        .tl-item.marginal .tl-dot { border-color: var(--c-yellow); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1); }
-        .tl-content { padding: 15px; background-color: var(--bg-card); position: relative; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--c-teal); }
-        .tl-item.critical .tl-content { border-left-color: var(--c-red); }
-        .tl-item.marginal .tl-content { border-left-color: var(--c-yellow); }
-        .tl-date { font-weight: 700; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 5px; display:flex; justify-content:space-between; }
-        .tl-obs { font-weight: 600; color: var(--text-main); margin-bottom: 5px; font-size: 1rem; }
-        .tl-rec { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-style: italic; }
-        .tl-action-box { background: rgba(13, 148, 136, 0.1); padding: 8px; border-radius: 4px; border: 1px solid var(--accent-teal); margin-top: 10px; }
-        .tl-action-date { font-size: 0.7rem; color: var(--accent-teal); font-weight: 700; margin-bottom: 2px; text-transform: uppercase; }
-        .tl-action-text { font-size: 0.85rem; color: var(--text-main); }
-
+        .timeline-container::after { content: ''; position: absolute; width: 2px; background-color: var(--border-color); top: 10px; bottom: 0; left: 29px; }
+        .tl-item { padding: 0 0 30px 60px; position: relative; }
+        .tl-dot { position: absolute; width: 16px; height: 16px; left: 22px; background-color: var(--bg-card); border: 4px solid var(--accent-teal); top: 5px; border-radius: 50%; z-index: 2; box-shadow: 0 0 0 4px var(--bg-body); }
+        .tl-item.critical .tl-dot { border-color: var(--accent-red); }
+        .tl-item.marginal .tl-dot { border-color: var(--accent-amber); }
+        .tl-content { padding: 20px; background-color: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); }
+        .tl-action-box { background: var(--accent-teal-soft); padding: 12px; border-radius: 8px; margin-top: 12px; border-left: 3px solid var(--accent-teal); }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
-        .modal-box { background: var(--bg-card); padding: 30px; border-radius: 12px; width: 450px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); color: var(--text-main); }
-        .map-row { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; font-size: 0.9rem; }
-        .btn-save { width:100%; background: var(--grad-teal); color: white; border: none; padding: 12px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(13, 148, 136, 0.3); }
-
-        /* NEW STYLES FOR SPLIT CARD LAYOUT */
-        .split-card-body {
-            display: flex;
-            flex-grow: 1;
-            align-items: center;
-            overflow: hidden;
-            padding-top: 5px;
+        .tl-date { 
+            display: flex; 
+            justify-content: space-between; /* Push items to edges */
+            align-items: center; 
+            width: 100%; 
+            margin-bottom: 8px;
         }
 
-        /* Custom Interactive Legend */
-        .legend-box {
-            width: 45%;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding-left: 10px;
-            justify-content: center;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            cursor: pointer;
-            padding: 6px 8px;
-            border-radius: 6px;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-            background: rgba(255,255,255,0.05);
-        }
-
-        .legend-item:hover {
-            background: rgba(0,0,0,0.05);
-            transform: translateX(2px);
-        }
-
-        .legend-item.active {
-            background: rgba(13, 148, 136, 0.1); 
-            border-color: var(--c-teal); 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .legend-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 8px;
-            flex-shrink: 0;
-        }
-
-        .legend-info {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.1;
-            flex-grow: 1;
-        }
-
-        .legend-label { font-weight: 600; color: var(--text-main); font-size: 0.75rem; }
-        .legend-sub { font-size: 0.65rem; color: var(--text-muted); opacity: 0.8; }
-
-        .cb-split { width: 55%; height: 100%; position: relative; }
-        body.dark-mode .legend-item:hover { background: rgba(255,255,255,0.05); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-box { background: var(--bg-card); padding: 30px; border-radius: 20px; width: 450px; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); color: var(--text-main); }
         
         @media (max-width: 1200px) {
             .dashboard-grid { grid-template-columns: 1fr 1fr; }
             .a-dept, .a-trend, .a-list, .a-saved { grid-column: span 2; }
-            .a-top-equip, .a-top-area { grid-row: auto; }
-            .cb-tall { height: 250px; }
-            .a-trend .cb-standard, .a-saved .cb-standard { height: 250px; }
-            .issuer-card { width: 100%; flex: auto; flex-direction: row; align-items: center; gap: 20px; justify-content: space-between; }
-            .issuer-header { border-bottom: none; margin-bottom: 0; padding-bottom: 0; border-right: 1px solid #eee; padding-right: 20px; }
+            .a-top-equip { grid-row: auto; }
+            .chart-split-wrapper { flex-direction: column; }
+            .chart-split-left, .chart-split-right { width: 100%; }
         }
         @media (max-width: 768px) {
-            .filters-active { margin-left: 10px; max-width: 50vw; }
-            .sidebar { position: fixed; left: -270px; } .sidebar.mobile-active { left: 0; }
-            .dashboard-grid { grid-template-columns: 1fr; } 
+            .sidebar { position: fixed; left: -280px; } .sidebar.mobile-active { left: 0; }
+            .dashboard-grid { grid-template-columns: 1fr; padding: 15px; } 
             .a-dept, .a-cat, .a-act-taken, .a-equip, .a-crit, .a-age, .a-fault, .a-list, .a-top-equip, .a-top-area, .a-trend, .a-closed-under, .a-saved { grid-column: span 1; grid-row: auto; }
-            .cb-tall { height: 280px; } .top-stats-container { padding: 10px; } .dashboard-grid { padding: 0 10px 20px 10px; }
-            .last-update { display: none; } .page-header-title { font-size: 1rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
-            .tl-controls { flex-direction: column; } .timeline-container::after { left: 20px; } .tl-item { padding-left: 45px; padding-right: 10px; } .tl-dot { left: 11px; }
-            .a-list { height: 350px; }
+            .top-stats-container { padding: 15px; } .kpi-row { gap: 10px; } .kpi-card { flex: 1 1 100%; }
         }
     </style>
 </head>
@@ -340,47 +311,47 @@
 
     <div id="settingsModal" class="modal">
         <div class="modal-box">
-            <h3>⚙️ Zone Settings</h3>
+            <h3 style="margin-bottom:20px; font-weight:800;">⚙️ Zone Configuration</h3>
             <div id="mappingContainer"></div>
-            <button class="btn-save" onclick="saveMappings()">Save Configuration</button>
-            <button class="btn-save" style="background:var(--border-color); color:var(--text-main); margin-top:10px; box-shadow:none; border:1px solid var(--border-color);" onclick="closeSettings()">Cancel</button>
+            <button class="btn-save side-btn btn-upload-side" onclick="saveMappings()">Save Configuration</button>
+            <button class="side-btn" style="background:var(--bg-body); color:var(--text-muted);" onclick="closeSettings()">Cancel</button>
         </div>
     </div>
 
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <img src="https://lgyladuiyezqccyjxqgn.supabase.co/storage/v1/object/public/Image/cbmlogo.png" alt="CBM Logo" class="sidebar-logo">
-            <button class="sidebar-close-btn" onclick="toggleSidebar()"><i class="fas fa-angle-left"></i></button>
+            <button class="sidebar-close-btn" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
         </div>
         
         <div class="nav-section">
-            <div class="nav-label">MENU</div>
+            <div class="nav-label">Analytics</div>
             <div class="nav-item active" id="nav-dash" onclick="switchView('dashboard')">
-                <i class="fas fa-th-large"></i> Dashboard
+                <i class="fas fa-table-columns"></i> Dashboard
             </div>
             <div class="nav-item" id="nav-time" onclick="switchView('timeline')">
-                <i class="fas fa-history"></i> Timeline
+                <i class="fas fa-clock-rotate-left"></i> History Timeline
             </div>
         </div>
 
         <div class="sidebar-content">
-            <div class="nav-label">FILTERS</div>
+            <div class="nav-label">Filters</div>
             <div id="unitListContainer" style="margin-bottom:20px;"></div>
-            <div class="nav-label">ZONES</div>
+            <div class="nav-label">Zones</div>
             <div id="zoneListContainer"></div>
         </div>
 
         <div class="sidebar-footer">
             <input type="file" id="csvInput" accept=".csv" style="display:none;" onchange="handleUpload(event)">
             <button class="side-btn btn-upload-side" onclick="document.getElementById('csvInput').click()">
-                <i class="fas fa-cloud-upload-alt"></i> Upload Data
+                <i class="fas fa-cloud-arrow-up"></i> Upload CSV
             </button>
             <button class="side-btn btn-reset-side" onclick="clearData()">
-                <i class="fas fa-trash-alt"></i> Reset System
+                <i class="fas fa-trash"></i> Reset Data
             </button>
             <div class="footer-credits">
-                Copyright &copy; 2025 Condition Monitoring.<br>All Rights Reserved.
-                <div style="margin-top:5px;">Developed by <span class="dev-name">Sourav Biswal</span></div>
+                MTR Analytics Suite v2.4<br>
+                <div style="margin-top:5px;">Engineered by <span class="dev-name">Sourav Biswal</span></div>
             </div>
         </div>
     </div>
@@ -388,161 +359,167 @@
     <div class="main" id="mainContent">
         <div class="top-bar">
             <div class="top-left">
-                <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-                <span id="pageTitle" class="page-header-title">MTR Dashboard</span>
+                <button class="toggle-btn top-icon-btn" onclick="toggleSidebar()" style="margin-left:0; margin-right:15px;"><i class="fas fa-bars"></i></button>
+                <span id="pageTitle" class="page-header-title">Overview</span>
                 <div class="filters-active" id="activeFilters"></div>
             </div>
             <div style="display:flex; align-items:center;">
                 <div class="last-update" id="lastUpdateContainer" style="display:none;">
-                    <i class="fas fa-history"></i> <span id="lastUpdateDate">--</span>
+                    <i class="fas fa-calendar-check"></i> <span id="lastUpdateDate">--</span>
                 </div>
-                <button class="theme-btn" onclick="toggleTheme()" title="Toggle Theme"><i class="fas fa-moon"></i></button>
-                <button class="export-btn" onclick="exportPDF()" title="Export PDF"><i class="fas fa-file-pdf"></i></button>
-                <button class="settings-btn" onclick="openSettings()"><i class="fas fa-cog"></i></button>
+                <button class="top-icon-btn" onclick="toggleTheme()" title="Toggle Theme"><i class="fas fa-moon"></i></button>
+                <button class="top-icon-btn" onclick="exportPDF()" title="Export PDF"><i class="fas fa-file-pdf"></i></button>
+                <button class="top-icon-btn" onclick="openSettings()"><i class="fas fa-gear"></i></button>
             </div>
         </div>
 
         <div class="top-stats-container">
             <div class="kpi-row">
                 <div class="kpi-card k-gen active" id="card-Generated" onclick="setKPI('Generated')">
-                    <div class="kpi-content"><div class="kpi-title">Generated</div><div class="kpi-num" id="k-gen">0</div></div>
-                    <div class="kpi-icon-circle"><i class="fas fa-file-alt kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
+                    <div class="kpi-content"><div class="kpi-title">Total Reports</div><div class="kpi-num" id="k-gen">0</div></div>
+                    <div class="kpi-icon-bg"><i class="fas fa-file-lines"></i></div>
                 </div>
                 <div class="kpi-card k-comp" id="card-Completed" onclick="setKPI('Completed')">
                     <div class="kpi-content"><div class="kpi-title">Completed</div><div class="kpi-num" id="k-comp">0</div></div>
-                    <div class="kpi-icon-circle"><i class="fas fa-check-circle kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
+                    <div class="kpi-icon-bg"><i class="fas fa-circle-check"></i></div>
                 </div>
                 <div class="kpi-card k-open" id="card-Open" onclick="setKPI('Open')">
                     <div class="kpi-content"><div class="kpi-title">Open Cases</div><div class="kpi-num" id="k-open">0</div></div>
-                    <div class="kpi-icon-circle"><i class="fas fa-folder-open kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
+                    <div class="kpi-icon-bg"><i class="fas fa-folder-open"></i></div>
                 </div>
                 <div class="kpi-card k-pend" id="card-Pending" onclick="setKPI('Pending')">
-                    <div class="kpi-content"><div class="kpi-title">Act. Pending</div><div class="kpi-num" id="k-pend">0</div></div>
-                    <div class="kpi-icon-circle"><i class="fas fa-clock kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
+                    <div class="kpi-content"><div class="kpi-title">Action Pending</div><div class="kpi-num" id="k-pend">0</div></div>
+                    <div class="kpi-icon-bg"><i class="fas fa-clock"></i></div>
                 </div>
                 <div class="kpi-card k-plan" id="card-Planned" onclick="setKPI('Planned')">
-                    <div class="kpi-content"><div class="kpi-title">Act. Planned</div><div class="kpi-num" id="k-plan">0</div></div>
-                    <div class="kpi-icon-circle"><i class="fas fa-calendar-alt kpi-icon" style="position:static; opacity:1; font-size:1.1rem;"></i></div>
+                    <div class="kpi-content"><div class="kpi-title">Action Planned</div><div class="kpi-num" id="k-plan">0</div></div>
+                    <div class="kpi-icon-bg"><i class="fas fa-calendar-day"></i></div>
                 </div>
             </div>
             <div class="issuer-card">
-                <div class="issuer-header">Report Issued By</div>
+                <div class="issuer-header">Analysis Source</div>
                 <div class="issuer-row">
-                    <div class="issuer-label"><i class="fas fa-user-tie" style="color:#64748b"></i> Analyst</div>
+                    <div class="issuer-label"><i class="fas fa-user-tie" style="color:var(--text-muted)"></i> Human</div>
                     <div class="issuer-val" id="valAnalyst">0</div>
                 </div>
                 <div class="issuer-row">
-                    <div class="issuer-label"><i class="fas fa-robot" style="color:#0d9488"></i> AI</div>
+                    <div class="issuer-label"><i class="fas fa-microchip" style="color:var(--accent-teal)"></i> AI Model</div>
                     <div class="issuer-val" id="valAI">0</div>
                 </div>
             </div>
         </div>
 
-        <div class="scroll-content">
-            <div id="view-dashboard" class="view-section active-view">
-                <div class="dashboard-grid">
-                    
-                    <div class="d-card a-dept">
-                        <div class="card-head">Department Wise <small>(Click to filter)</small></div>
-                        <div class="chart-box cb-tall"><canvas id="cDept"></canvas></div>
-                    </div>
-                    <div class="d-card a-cat">
-                        <div class="card-head">Category Wise</div>
-                        <div class="chart-box cb-standard"><canvas id="cCat"></canvas></div>
-                    </div>
-                    <div class="d-card a-equip">
-                        <div class="card-head">Equipment Type</div>
-                        <div class="chart-box cb-standard"><canvas id="cEquip"></canvas></div>
-                    </div>
+        <div id="view-dashboard" class="view-section active-view">
+            <div class="dashboard-grid">
+                
+                <div class="d-card a-dept">
+                    <div class="card-head">Department Analysis <small>Click bars to filter</small></div>
+                    <div class="chart-box cb-tall"><canvas id="cDept"></canvas></div>
+                </div>
+                <div class="d-card a-cat">
+                    <div class="card-head">Category Distribution</div>
+                    <div class="chart-box cb-standard"><canvas id="cCat"></canvas></div>
+                </div>
+                <div class="d-card a-equip">
+                    <div class="card-head">Equipment Type</div>
+                    <div class="chart-box cb-standard"><canvas id="cEquip"></canvas></div>
+                </div>
 
-                    <div class="d-card a-crit">
-                        <div class="card-head">Criticality Wise</div>
-                        <div class="chart-box cb-standard"><canvas id="cCrit"></canvas></div>
-                    </div>
-                    <div class="d-card a-age">
-                        <div class="card-head">Age Group (Open)</div>
-                        <table id="tAge"></table>
-                    </div>
-                    <div class="d-card a-act-taken">
-                        <div class="card-head">Action Taken (Open)</div>
-                        <div class="chart-box cb-standard">
-                            <canvas id="cDoughnut"></canvas>
-                            <div class="donut-center"><div class="dc-val" id="valActTaken">0</div></div>
+                <div class="d-card a-crit">
+                    <div class="card-head" style="color:var(--accent-red)">Criticality Overview</div>
+                    <div class="chart-split-wrapper">
+                        <div class="chart-split-left">
+                            <canvas id="cCrit"></canvas>
+                            <div class="donut-center"><div class="dc-val" id="valTotalCrit">0</div></div>
                         </div>
-                    </div>
-                    
-                    <div class="d-card a-top-equip">
-                        <div class="card-head">Top 10 Bad Actors</div>
-                        <div class="chart-box cb-tall"><canvas id="cTopEquip"></canvas></div>
-                    </div>
-
-                    <div class="d-card a-fault">
-                        <div class="card-head">Fault Type</div>
-                        <div class="fault-grid" id="faultList"></div>
-                    </div>
-                    
-                    <div class="d-card a-closed-under">
-                        <div class="card-head">Diagnosis Accuracy</div>
-                        <div class="split-card-body">
-                            <div class="chart-box cb-split">
-                                <canvas id="cClosedUnder"></canvas>
-                                <div class="donut-center"><div class="dc-val" id="valClosedUnder">0</div></div>
-                            </div>
-                            <div id="legendClosedUnder" class="legend-box"></div>
-                        </div>
-                    </div>
-
-                    <div class="d-card a-top-area">
-                        <div class="card-head">Top 5 Abnormal Areas</div>
-                        <div class="chart-box cb-standard"><canvas id="cTopArea"></canvas></div>
-                    </div>
-
-                    <div class="d-card a-trend">
-                        <div class="card-head">Input vs Closed (Last 7 Days)</div>
-                        <div class="chart-box cb-standard"><canvas id="cTrend"></canvas></div>
-                    </div>
-                    <div class="d-card a-saved">
-                        <div class="card-head" style="justify-content:space-between; align-items:center;">
-                            <span>Downtime Saved</span>
-                            <div style="display:flex; gap:8px; align-items:center;">
-                                <select id="optFY" style="padding:2px 4px; font-size:0.8rem; border:1px solid var(--border-color); border-radius:4px; background:var(--bg-body); color:var(--text-main);" onchange="renderSavedChart()">
-                                    </select>
-                                <span id="valTotalSaved" style="font-weight:800; color:var(--c-purple); font-size:0.9rem;">0h</span>
-                            </div>
-                        </div>
-                        <div class="chart-box cb-standard"><canvas id="cSaved"></canvas></div>
-                    </div>
-
-                    <div class="d-card a-list">
-                        <div class="card-head">Recommended Actions</div>
-                        <div style="overflow-y:auto">
-                            <table id="tList">
-                                <thead><tr><th>Date</th><th>Plant</th><th>Equip</th><th>Action</th><th>Remarks</th></tr></thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
+                        <div class="chart-split-right" id="critLegendList"></div>
                     </div>
                 </div>
-            </div>
 
-            <div id="view-timeline" class="view-section">
-                <div class="timeline-wrapper">
-                    <div class="tl-controls">
-                        <select id="tl-plant" class="tl-select" onchange="filterTimelineEquipment()">
-                            <option value="">Select Plant...</option>
-                        </select>
-                        <select id="tl-equip" class="tl-select" onchange="renderTimeline()">
-                            <option value="">Select Equipment...</option>
-                        </select>
+                <div class="d-card a-age">
+                    <div class="card-head">Aging Analysis</div>
+                    <table id="tAge"></table>
+                </div>
+                <div class="d-card a-act-taken">
+                    <div class="card-head">Action Taken</div>
+                    <div class="chart-box cb-standard">
+                        <canvas id="cDoughnut"></canvas>
+                        <div class="donut-center" style="pointer-events:auto;"><div class="dc-val" id="valActTaken">0</div></div>
                     </div>
-                    <div id="timeline-container" class="timeline-container">
-                        <div style="text-align:center; color:#94a3b8; padding:30px;">
-                            Select a Plant and Equipment to view history.
+                </div>
+                
+                <div class="d-card a-top-equip">
+                    <div class="card-head" style="color:var(--accent-red)">Top 10 Bad Actors</div>
+                    <div class="chart-box cb-tall"><canvas id="cTopEquip"></canvas></div>
+                </div>
+
+                <div class="d-card a-fault">
+                    <div class="card-head">Fault Distribution</div>
+                    <div class="fault-grid" id="faultList"></div>
+                </div>
+                
+                <div class="d-card a-closed-under">
+                    <div class="card-head" style="color:var(--accent-green)">Diagnosis Accuracy</div>
+                    <div class="chart-split-wrapper">
+                        <div class="chart-split-left">
+                            <canvas id="cClosedUnder"></canvas>
+                            <div class="donut-center"><div class="dc-val" id="valClosedUnder" style="font-size: 1.5rem;">0</div></div>
                         </div>
+                        <div class="chart-split-right" id="diagnosisLegendList"></div>
+                    </div>
+                </div>
+
+                <div class="d-card a-top-area">
+                    <div class="card-head" style="color:var(--accent-amber)">Top 5 Abnormal Areas</div>
+                    <div class="chart-box cb-standard"><canvas id="cTopArea"></canvas></div>
+                </div>
+
+                <div class="d-card a-trend">
+                    <div class="card-head">7-Day Trend Analysis</div>
+                    <div class="chart-box cb-standard"><canvas id="cTrend"></canvas></div>
+                </div>
+                <div class="d-card a-saved">
+                    <div class="card-head">
+                        <span style="color:var(--accent-purple)">Downtime Saved</span>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <select id="optFY" style="padding:4px 8px; font-size:0.8rem; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-body); color:var(--text-main);" onchange="renderSavedChart()">
+                                </select>
+                            <span id="valTotalSaved" style="font-weight:800; color:var(--accent-purple); font-size:1rem;">0h</span>
+                        </div>
+                    </div>
+                    <div class="chart-box cb-standard"><canvas id="cSaved"></canvas></div>
+                </div>
+
+                <div class="d-card a-list">
+                    <div class="card-head">Action Registry</div>
+                    <div style="overflow-y:auto; height:100%;">
+                        <table id="tList">
+                            <thead><tr><th>Date</th><th>Plant</th><th>Equip</th><th>Action</th><th>Remarks</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div id="view-timeline" class="view-section">
+            <div class="timeline-wrapper">
+                <div class="tl-controls">
+                    <select id="tl-plant" class="tl-select" onchange="filterTimelineEquipment()">
+                        <option value="">Select Plant...</option>
+                    </select>
+                    <select id="tl-equip" class="tl-select" onchange="renderTimeline()">
+                        <option value="">Select Equipment...</option>
+                    </select>
+                </div>
+                <div id="timeline-container" class="timeline-container">
+                    <div style="text-align:center; color:var(--text-muted); padding:30px;">
+                        Select a Plant and Equipment above to visualize history.
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -553,28 +530,26 @@
         
         Chart.register(ChartDataLabels);
 
-        function getGradient(ctx, colorStart, colorEnd) {
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, colorStart);
-            gradient.addColorStop(1, colorEnd);
-            return gradient;
-        }
-
-        const ICONS={'Bearing':'fa-circle-notch','Alignment':'fa-ruler-combined','Balancing':'fa-crosshairs','Lubrication':'fa-oil-can','Electrical':'fa-bolt','Gear':'fa-cogs','Flow':'fa-wind','Structure':'fa-cubes'};
+        // Modernized Chart Defaults
+        Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+        Chart.defaults.color = '#64748b';
+        Chart.defaults.scale.grid.color = 'transparent'; // Remove Grid Lines
+        
+        const ICONS={'Bearing':'fa-circle-notch','Alignment':'fa-ruler-combined','Balancing':'fa-crosshairs','Lubrication':'fa-oil-can','Electrical':'fa-bolt','Gear':'fa-gears','Flow':'fa-wind','Structure':'fa-cubes'};
         const ZONES_DEFAULT=['IRON MAKING','STEEL MAKING','PROCESS PLANT','OTHER'];
         let charts={};
 
         window.addEventListener('load', () => {
             if(localStorage.getItem('mtr_theme') === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.querySelector('.theme-btn i').className = 'fas fa-sun';
+                document.querySelector('.top-icon-btn[title="Toggle Theme"] i').className = 'fas fa-sun';
             }
 
             const savedData = localStorage.getItem('mtr_data');
             if(savedData) {
                 try { rawData = JSON.parse(savedData); processData(); renderSidebar(); applyFilters(); initTimelineFilters(); } catch(e) { console.error(e); }
             } else {
-                document.getElementById('zoneListContainer').innerHTML = '<div style="text-align:center; padding:20px; color:#64748b; font-size:0.85rem;">Upload Data via Bottom Button</div>';
+                document.getElementById('zoneListContainer').innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.85rem;">Upload Data via Bottom Button</div>';
             }
         });
 
@@ -608,7 +583,7 @@
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if(viewName === 'dashboard') document.getElementById('nav-dash').classList.add('active');
             if(viewName === 'timeline') document.getElementById('nav-time').classList.add('active');
-            const titleMap = { 'dashboard': 'MTR Dashboard', 'timeline': 'Equipment Timeline' };
+            const titleMap = { 'dashboard': 'Overview', 'timeline': 'Equipment History' };
             document.getElementById('pageTitle').innerText = titleMap[viewName];
             if (window.innerWidth <= 768) toggleSidebar();
         }
@@ -617,8 +592,10 @@
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('mtr_theme', isDark ? 'dark' : 'light');
-            document.querySelector('.theme-btn i').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-            renderDashboard(); 
+            document.querySelector('.top-icon-btn[title="Toggle Theme"] i').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            
+            Chart.defaults.color = isDark ? '#94a3b8' : '#64748b';
+            renderCharts(); 
         }
 
         function processData(){
@@ -631,7 +608,6 @@
                     r._dateObj=new Date(p[2],p[1]-1,p[0]);
                     r._daysOld=Math.ceil(Math.abs(today-r._dateObj)/(1000*60*60*24));
                     if(!maxDate || r._dateObj > maxDate) maxDate = r._dateObj;
-                    
                     const month = r._dateObj.getMonth();
                     const year = r._dateObj.getFullYear();
                     const fyYear = (month >= 3) ? year + 1 : year;
@@ -644,11 +620,14 @@
                 }
                 r._drs=(r['DRS Status']||'').trim();
                 r._act=(r['Action Status']||'').trim();
-                r['Closed Under'] = (r['Closed Under']||'').trim().toUpperCase(); 
                 r._saved = parseFloat(r['Hours Saved']) || 0; 
-
                 r._zone = (r['ZONE'] && r['ZONE'].trim()) ? r['ZONE'].trim().toUpperCase() : (manualZoneMap[r.Plant] || 'OTHER');
                 r._unit = (r['Org. Unit'] || 'Unknown').trim();
+                let cu = (r['Closed Under']||'').trim().toUpperCase();
+                if (cu.includes('TRUE') || cu === 'TP') r._closedUnder = 'TP';
+                else if (cu.includes('FALSE POS') || cu === 'FP') r._closedUnder = 'FP';
+                else if (cu.includes('FALSE NEG') || cu === 'FN') r._closedUnder = 'FN';
+                else r._closedUnder = 'N/A';
             });
             if(maxDate) {
                 const dateStr = maxDate.toLocaleDateString('en-GB'); 
@@ -660,21 +639,12 @@
         
         function populateFYDropdown() {
             const fys = new Set();
-            rawData.forEach(r => {
-                if(r._saved > 0 && r._fy) fys.add(r._fy);
-            });
-            const sortedFYs = Array.from(fys).sort().reverse(); 
-            
+            rawData.forEach(r => { if(r._saved > 0 && r._fy) fys.add(r._fy); });
+            const sortedFYs = Array.from(fys).sort().reverse();
             const sel = document.getElementById('optFY');
             sel.innerHTML = '';
-            if(sortedFYs.length === 0) {
-                sel.innerHTML = '<option value="">No Data</option>';
-                return;
-            }
-            
-            sortedFYs.forEach(fy => {
-                sel.innerHTML += `<option value="${fy}">${fy}</option>`;
-            });
+            if(sortedFYs.length === 0) { sel.innerHTML = '<option value="">No Data</option>'; return; }
+            sortedFYs.forEach(fy => { sel.innerHTML += `<option value="${fy}">${fy}</option>`; });
             sel.value = sortedFYs[0];
         }
 
@@ -707,6 +677,8 @@
                         const a = v.substring(separatorIndex + 3);
                         if (r.Plant !== p || r.Area !== a) return false;
                     }
+                    else if(k==='Closed Under'){ if(r._closedUnder !== v) return false; }
+                    else if(k==='Criticality'){ if(r['Criticality'] !== v) return false; }
                     else{if(r[k]!==undefined && r[k]!==v)return false;}
                 }
                 return true;
@@ -730,6 +702,8 @@
                         const a = v.substring(separatorIndex + 3);
                         if (r.Plant !== p || r.Area !== a) return false;
                     }
+                    else if(k==='Closed Under'){ if(r._closedUnder !== v) return false; }
+                    else if(k==='Criticality'){ if(r['Criticality'] !== v) return false; }
                     else{if(r[k]!==undefined && r[k]!==v)return false;}
                 }
                 return true;
@@ -749,337 +723,152 @@
             
             const isDark = document.body.classList.contains('dark-mode');
             const txtColor = isDark ? '#cbd5e1' : '#475569';
-            Chart.defaults.color = txtColor;
-            Chart.defaults.borderColor = isDark ? '#334155' : '#e2e8f0';
-            Chart.defaults.animation = { duration: 1000, easing: 'easeOutQuart' };
+
+            const colors = {
+                red: '#f43f5e', orange: '#f59e0b', green: '#10b981', teal: '#14b8a6', 
+                blue: '#3b82f6', purple: '#8b5cf6', slate: '#64748b'
+            };
 
             const plants=[...new Set(data.map(r=>r.Plant))];
-            const ctxDept = document.getElementById('cDept').getContext('2d');
-            
             drawChart('cDept', 'bar', {
                 labels:plants,
                 datasets:[
-                    {
-                        label:'Critical',
-                        data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),
-                        backgroundColor: getGradient(ctxDept, '#f87171', '#dc2626'),
-                        stack:'0', borderRadius: 4
-                    },
-                    {
-                        label:'Marginal',
-                        data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),
-                        backgroundColor: getGradient(ctxDept, '#fbbf24', '#d97706'),
-                        stack:'0', borderRadius: 4
-                    }
+                    {label:'Critical',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),backgroundColor:colors.red, stack:'0', borderRadius: 4, barPercentage: 0.6},
+                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:colors.orange, stack:'0', borderRadius: 4, barPercentage: 0.6}
                 ]
-            }, 'Plant');
+            }, 'Plant', { scales: { x: { stacked: true }, y: { stacked: true, display: false } } });
 
             const cats=agg('Category');
-            const ctxCat = document.getElementById('cCat').getContext('2d');
             drawChart('cCat', 'bar', {
                 labels:Object.keys(cats),
-                datasets:[{
-                    data:Object.values(cats),
-                    backgroundColor: getGradient(ctxCat, '#2dd4bf', '#0d9488'),
-                    label:'Count', borderRadius: 4
-                }]
+                datasets:[{data:Object.values(cats),backgroundColor:colors.teal,label:'Count', borderRadius: 50, barThickness: 20}]
             }, 'Category');
 
             const equips=agg('Type');
-            const ctxEquip = document.getElementById('cEquip').getContext('2d');
             drawChart('cEquip', 'bar', {
                 labels:Object.keys(equips),
-                datasets:[{
-                    data:Object.values(equips),
-                    backgroundColor: getGradient(ctxEquip, '#60a5fa', '#2563eb'),
-                    label:'Count',indexAxis: 'y', borderRadius: 4
-                }]
+                datasets:[{data:Object.values(equips),backgroundColor:colors.slate,label:'Count',indexAxis: 'y', borderRadius: 50, barThickness: 15}]
             }, 'Type', { indexAxis: 'y' }); 
 
-            const crits = agg('Criticality');
-            const critLabels = Object.keys(crits);
-            const critValues = Object.values(crits);
-            const critColors = critLabels.map(label => {
-                const l = label.toLowerCase();
-                if(l.includes('critical')) return '#dc2626';
-                if(l.includes('marginal')) return '#d97706'; 
-                return '#cbd5e1'; 
+            // --- SPLIT CRITICALITY CHART ---
+            const critCounts = {'Critical':0, 'Marginal':0, 'Normal':0};
+            data.forEach(r => {
+                const c = r.Criticality || 'Normal';
+                if(c === 'Critical') critCounts['Critical']++;
+                else if(c === 'Marginal') critCounts['Marginal']++;
+                else critCounts['Normal']++;
             });
+            document.getElementById('valTotalCrit').innerText = data.length;
+
             drawChart('cCrit', 'doughnut', {
-                labels: critLabels,
-                datasets: [{ data: critValues, backgroundColor: critColors, borderWidth:0 }]
-            }, 'Criticality');
+                labels: ['Critical', 'Marginal', 'Normal'],
+                datasets: [{ 
+                    data: [critCounts['Critical'], critCounts['Marginal'], critCounts['Normal']], 
+                    backgroundColor: [colors.red, colors.orange, colors.slate], 
+                    borderWidth: 0, hoverOffset: 4 
+                }]
+            }, 'Criticality', { cutout: '75%', borderRadius: 20, plugins: { legend: { display: false }, datalabels: { display: false } } });
+
+            const critLegend = document.getElementById('critLegendList');
+            critLegend.innerHTML = '';
+            const critItems = [
+                { key: 'Critical', count: critCounts['Critical'], color: colors.red },
+                { key: 'Marginal', count: critCounts['Marginal'], color: colors.orange },
+                { key: 'Normal', count: critCounts['Normal'], color: colors.slate }
+            ];
+            critItems.forEach(item => {
+                if(item.count > 0 || item.key !== 'Normal') {
+                    const pct = data.length > 0 ? ((item.count / data.length) * 100).toFixed(1) + '%' : '0.0%';
+                    const isActive = filters['Criticality'] === item.key;
+                    const div = document.createElement('div');
+                    div.className = `legend-item ${isActive ? 'active-filter' : ''}`;
+                    div.innerHTML = `<div class="diag-info"><div class="legend-head">${item.key}</div><div><span class="legend-dot" style="background:${item.color}"></span><span class="legend-val" style="font-size:0.9rem;">${pct}</span></div></div><div class="legend-val">${item.count}</div>`;
+                    div.onclick = () => toggleFilter('Criticality', item.key);
+                    critLegend.appendChild(div);
+                }
+            });
 
             // Action Taken
             const actionTakenRows = data.filter(r=>(r._drs.includes('Pending')||r._drs.includes('Planned'))&&r._act==='Completed');
             const taken = actionTakenRows.length;
             const actionTakenNames = actionTakenRows.map(r => r['Equipment Name'] || 'Unknown');
-            
             document.getElementById('valActTaken').innerText=taken;
-            const centerEl = document.getElementById('valActTaken');
-            const centerDiv = centerEl.parentElement; 
-            const showNames = () => {
-                if(actionTakenNames.length > 0) {
-                    centerEl.style.fontSize = '0.7rem';
-                    centerEl.style.lineHeight = '1.2';
-                    centerEl.innerHTML = (actionTakenNames.length > 2) 
-                        ? actionTakenNames.slice(0, 2).join('<br>') + `<br><span style='font-size:0.6rem;opacity:0.7'>+${actionTakenNames.length - 2} more</span>`
-                        : actionTakenNames.join('<br>');
-                }
-            };
-            const showCount = () => {
-                centerEl.style.fontSize = '1.4rem';
-                centerEl.style.lineHeight = '1';
-                centerEl.innerText = taken;
-            };
-            centerDiv.onmouseenter = showNames;
-            centerDiv.onmouseleave = showCount;
+
+            const centerEl = document.getElementById('valActTaken'); const centerDiv = centerEl.parentElement; 
+            const showNames = () => { if(actionTakenNames.length > 0) { centerEl.style.fontSize = actionTakenNames.length > 2 ? '0.75rem' : '0.8rem'; centerEl.innerText = actionTakenNames.length > 2 ? actionTakenNames.slice(0, 2).join('\n') + `\n(+${actionTakenNames.length - 2})` : actionTakenNames.join('\n'); } };
+            const showCount = () => { centerEl.style.fontSize = '2rem'; centerEl.innerText = taken; };
+            centerDiv.onmouseenter = showNames; centerDiv.onmouseleave = showCount;
 
             drawChart('cDoughnut', 'doughnut', {
-                labels:['Action Taken (Open Report)','Other'],
-                datasets:[{data:[taken, data.length-taken],backgroundColor:['#0d9488', isDark ? '#334155' : '#e2e8f0'],borderWidth:0,cutout:'75%'}]
+                labels:['Action Taken (Open)','Other'],
+                datasets:[{data:[taken, data.length-taken],backgroundColor:[colors.teal, isDark ? '#1e293b' : '#e2e8f0'],borderWidth:0}]
             }, null, {
-                onHover: (e, elements) => {
-                    if (elements && elements.length > 0 && elements[0].index === 0) { showNames(); } 
-                    else if (!centerDiv.matches(':hover')) { showCount(); }
-                }
+                cutout: '80%', borderRadius: 20,
+                onHover: (e, elements) => { if (elements && elements.length > 0 && elements[0].index === 0) showNames(); else if(!centerDiv.matches(':hover')) showCount(); }
             });
 
-            // Trend Chart
-            const dateSet = new Set();
-            const genMap = {};
-            const closedMap = {};
-            data.forEach(r => {
-                if(r.Date) { dateSet.add(r.Date); genMap[r.Date] = (genMap[r.Date]||0)+1; }
-                if(r['Action Taken Date']) { dateSet.add(r['Action Taken Date']); closedMap[r['Action Taken Date']] = (closedMap[r['Action Taken Date']]||0)+1; }
-            });
-            const sortedDates = Array.from(dateSet).sort((a,b) => {
-                const da = a.split('-').reverse().join('');
-                const db = b.split('-').reverse().join('');
-                return da.localeCompare(db);
-            }).slice(-7);
+            // --- TREND CHART WITH GRADIENT ---
+            const dateSet = new Set(); const genMap = {}; const closedMap = {};
+            data.forEach(r => { if(r.Date) { dateSet.add(r.Date); genMap[r.Date] = (genMap[r.Date]||0)+1; } if(r['Action Taken Date']) { dateSet.add(r['Action Taken Date']); closedMap[r['Action Taken Date']] = (closedMap[r['Action Taken Date']]||0)+1; } });
+            const sortedDates = Array.from(dateSet).sort((a,b) => { const da = a.split('-').reverse().join(''); const db = b.split('-').reverse().join(''); return da.localeCompare(db); }).slice(-7);
             
             const ctxTrend = document.getElementById('cTrend').getContext('2d');
-            const gradBlue = ctxTrend.createLinearGradient(0,0,0,300);
-            gradBlue.addColorStop(0, 'rgba(37, 99, 235, 0.5)');
-            gradBlue.addColorStop(1, 'rgba(37, 99, 235, 0)');
-            
-            const gradGreen = ctxTrend.createLinearGradient(0,0,0,300);
-            gradGreen.addColorStop(0, 'rgba(22, 163, 74, 0.5)');
-            gradGreen.addColorStop(1, 'rgba(22, 163, 74, 0)');
+            const gradBlue = ctxTrend.createLinearGradient(0, 0, 0, 300);
+            gradBlue.addColorStop(0, 'rgba(59, 130, 246, 0.5)'); gradBlue.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+            const gradGreen = ctxTrend.createLinearGradient(0, 0, 0, 300);
+            gradGreen.addColorStop(0, 'rgba(16, 185, 129, 0.5)'); gradGreen.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
 
             drawChart('cTrend', 'line', {
                 labels: sortedDates,
                 datasets: [
-                    {
-                        label: 'Generated', data: sortedDates.map(d => genMap[d] || 0), 
-                        borderColor: '#2563eb', backgroundColor: gradBlue, fill: true, tension: 0.4
-                    },
-                    {
-                        label: 'Closed', data: sortedDates.map(d => closedMap[d] || 0), 
-                        borderColor: '#16a34a', backgroundColor: gradGreen, fill: true, tension: 0.4
-                    }
+                    {label: 'Generated', data: sortedDates.map(d => genMap[d] || 0), borderColor: colors.blue, backgroundColor: gradBlue, fill: true, borderWidth: 3, pointRadius: 4, tension: 0.4},
+                    {label: 'Closed', data: sortedDates.map(d => closedMap[d] || 0), borderColor: colors.green, backgroundColor: gradGreen, fill: true, borderWidth: 3, pointRadius: 4, tension: 0.4}
                 ]
             }, null, { 
-                plugins: { 
-                    // CUSTOM LEGEND LOGIC: Click "Generated" -> Shows ONLY Generated (hides Closed)
-                    legend: { 
-                        display: true, 
-                        position: 'bottom',
-                        onClick: (e, legendItem, legend) => {
-                            const index = legendItem.datasetIndex;
-                            const ci = legend.chart;
-                            if (ci.isDatasetVisible(index)) {
-                                // If visible, check if it's the ONLY one visible
-                                const othersVisible = ci.data.datasets.some((d, i) => i !== index && ci.isDatasetVisible(i));
-                                if (!othersVisible) {
-                                    // If it's the only one, show ALL (reset)
-                                    ci.data.datasets.forEach((d, i) => ci.setDatasetVisibility(i, true));
-                                } else {
-                                    // If others are visible, hide them and keep ONLY this one (ISOLATE)
-                                    ci.data.datasets.forEach((d, i) => ci.setDatasetVisibility(i, i === index));
-                                }
-                            } else {
-                                // If hidden, show it (and maybe others? No, let's just show it)
-                                ci.setDatasetVisibility(index, true);
-                            }
-                            ci.update();
-                        }
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                    }
-                },
-                // Hover configuration (Index mode for shared tooltips)
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                // Click configuration (Nearest mode to detect which line was clicked)
-                onClick: (e, elements, chart) => {
-                    const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: false }, true);
-                    
-                    if (!points || points.length === 0) return;
-                    
-                    const firstPoint = points[0];
-                    const datasetIndex = firstPoint.datasetIndex;
-                    const index = firstPoint.index;
-                    const dateValue = chart.data.labels[index];
-                    
-                    // Dataset 0 = Generated -> Filter by Date
-                    // Dataset 1 = Closed -> Filter by Action Taken Date
-                    const filterKey = (datasetIndex === 0) ? 'Date' : 'Action Taken Date';
-
-                    setTimeout(() => {
-                        toggleFilter(filterKey, dateValue);
-                    }, 0);
-                }
+                plugins: { legend: { display: true, position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } } },
+                scales: { y: { beginAtZero: true } }
             });
 
             // Top 10 Bad Actors
-            const eqCounts = {};
-            data.filter(r => r._drs !== 'Completed').forEach(r => {
-                const n = r['Equipment Name']; if(n) eqCounts[n] = (eqCounts[n] || 0) + 1;
-            });
+            const eqCounts = {}; data.filter(r => r._drs !== 'Completed').forEach(r => { const n = r['Equipment Name']; if(n) eqCounts[n] = (eqCounts[n] || 0) + 1; });
             const top10 = Object.entries(eqCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
-            const fullNames = top10.map(i => i[0]); 
-            const ctxTop = document.getElementById('cTopEquip').getContext('2d');
-
             drawChart('cTopEquip', 'bar', {
-                labels: fullNames, 
-                datasets: [{
-                    label: 'Open Faults', 
-                    data: top10.map(i => i[1]), 
-                    backgroundColor: getGradient(ctxTop, '#f87171', '#dc2626'), 
-                    indexAxis: 'y',
-                    borderRadius: 4
-                }]
-            }, 'Equipment Name', { 
-                indexAxis: 'y', 
-                layout: { padding: { left: 0 } },
-                scales: { 
-                    x: { display: false, grid: { display: false } }, 
-                    y: { 
-                        display: true, 
-                        grid: { display: false },
-                        ticks: { 
-                            autoSkip: false, 
-                            font: { size: 11 }, 
-                            crossAlign: 'near',
-                            callback: function(value) {
-                                const label = this.getLabelForValue(value);
-                                if (typeof label === 'string' && label.length > 25) {
-                                    return label.substring(0, 15) + '...' + label.substring(label.length - 5);
-                                }
-                                return label;
-                            }
-                        } 
-                    } 
-                } 
-            });
+                labels: top10.map(i => i[0]), 
+                datasets: [{ label: 'Open Faults', data: top10.map(i => i[1]), backgroundColor: colors.red, indexAxis: 'y', borderRadius: 50, barThickness: 12 }]
+            }, 'Equipment Name', { indexAxis: 'y', layout: { padding: { left: 0 } }, scales: { x: { display: false }, y: { display: true, grid: { display: false } } } });
 
-            // Top 5 Abnormal Areas
-            const areaCounts = {};
-            data.forEach(r => {
-                const area = r.Area ? r.Area.trim() : 'Unknown';
-                const plant = r.Plant ? r.Plant.trim() : 'Unknown';
-                const key = `${plant} - ${area}`;
-                areaCounts[key] = (areaCounts[key] || 0) + 1;
-            });
+            // Top 5 Areas
+            const areaCounts = {}; data.forEach(r => { const key = `${r.Plant || 'Unknown'} - ${r.Area || 'Unknown'}`; areaCounts[key] = (areaCounts[key] || 0) + 1; });
             const top5Areas = Object.entries(areaCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-            const areaLabels = top5Areas.map(i => i[0]); 
-            const areaData = top5Areas.map(i => i[1]);
-            const ctxArea = document.getElementById('cTopArea').getContext('2d');
-
             drawChart('cTopArea', 'bar', {
-                labels: areaLabels,
-                datasets: [{
-                    label: 'Reports',
-                    data: areaData,
-                    backgroundColor: getGradient(ctxArea, '#fbbf24', '#d97706'), 
-                    indexAxis: 'y',
-                    borderRadius: 4
-                }]
-            }, 'AreaComposite', {
-                indexAxis: 'y',
-                layout: { padding: { left: 0 } },
-                scales: { 
-                    x: { display: false, grid: { display: false } }, 
-                    y: { 
-                        display: true, 
-                        grid: { display: false },
-                        ticks: { 
-                            autoSkip: false, 
-                            font: { size: 11 }, 
-                            crossAlign: 'near',
-                            callback: function(value) {
-                                const label = this.getLabelForValue(value);
-                                if (typeof label === 'string' && label.length > 25) {
-                                    return label.substring(0, 15) + '...' + label.substring(label.length - 5);
-                                }
-                                return label;
-                            }
-                        } 
-                    } 
-                }
-            });
+                labels: top5Areas.map(i => i[0]),
+                datasets: [{ label: 'Reports', data: top5Areas.map(i => i[1]), backgroundColor: colors.orange, indexAxis: 'y', borderRadius: 50, barThickness: 15 }]
+            }, 'AreaComposite', { indexAxis: 'y', layout: { padding: { left: 0 } }, scales: { x: { display: false }, y: { display: true } } });
 
-            // --- DIAGNOSIS ACCURACY (Updated) ---
-            const closedUnderCounts = { 'TP': 0, 'FP': 0, 'FN': 0 };
-            let totalClosedUnder = 0;
-            data.forEach(r => {
-                if (r['Closed Under']) {
-                    const status = r['Closed Under']; 
-                    if (closedUnderCounts[status] !== undefined) {
-                        closedUnderCounts[status]++;
-                        totalClosedUnder++;
-                    }
-                }
-            });
+            // Interactive Diagnosis Split
+            const closedUnderCounts = { 'TP': 0, 'FP': 0, 'FN': 0 }; let totalClosedUnder = 0;
+            data.forEach(r => { if (r._closedUnder && r._closedUnder !== 'N/A') { closedUnderCounts[r._closedUnder]++; totalClosedUnder++; } });
             document.getElementById('valClosedUnder').innerText = totalClosedUnder;
 
-            const diagColors = { 'TP': '#16a34a', 'FP': '#d97706', 'FN': '#dc2626' };
-            const diagLabels = ['True Positive (TP)', 'False Positive (FP)', 'False Negative (FN)'];
-            const diagKeys = ['TP', 'FP', 'FN'];
-            const diagData = [closedUnderCounts['TP'], closedUnderCounts['FP'], closedUnderCounts['FN']];
-
             drawChart('cClosedUnder', 'doughnut', {
-                labels: diagLabels,
-                datasets: [{
-                    data: diagData,
-                    backgroundColor: [diagColors.TP, diagColors.FP, diagColors.FN],
-                    borderWidth: 0,
-                    hoverOffset: 4
-                }]
-            }, 'Closed Under', { 
-                filterValues: diagKeys,
-                plugins: {
-                    legend: { display: false }, // Hide default legend
-                    datalabels: { display: false }, // Hide text on chart
-                    tooltip: { enabled: true }
-                }
-            });
+                labels: ['TP', 'FP', 'FN'],
+                datasets: [{ data: [closedUnderCounts['TP'], closedUnderCounts['FP'], closedUnderCounts['FN']], backgroundColor: [colors.green, colors.orange, colors.red], borderWidth: 0, hoverOffset: 4 }]
+            }, 'Closed Under', { cutout: '75%', borderRadius: 20, plugins: { legend: { display: false }, datalabels: { display: false } } });
 
-            // Custom Interactive Legend
-            const legendContainer = document.getElementById('legendClosedUnder');
-            legendContainer.innerHTML = '';
-
-            diagKeys.forEach((key, index) => {
-                const count = diagData[index];
-                const pct = totalClosedUnder > 0 ? ((count / totalClosedUnder) * 100).toFixed(1) + '%' : '0%';
-                const isActive = filters['Closed Under'] === key ? 'active' : '';
-
-                legendContainer.innerHTML += `
-                    <div class="legend-item ${isActive}" onclick="toggleFilter('Closed Under', '${key}')">
-                        <div class="legend-dot" style="background: ${diagColors[key]}"></div>
-                        <div class="legend-info">
-                            <span class="legend-label">${key}</span>
-                            <span class="legend-sub">${pct} Accuracy</span>
-                        </div>
-                        <div class="legend-val">${count}</div>
-                    </div>
-                `;
+            const legendContainer = document.getElementById('diagnosisLegendList'); legendContainer.innerHTML = ''; 
+            const diagItems = [
+                { key: 'TP', label: 'True Positive', count: closedUnderCounts['TP'], color: colors.green },
+                { key: 'FP', label: 'False Positive', count: closedUnderCounts['FP'], color: colors.orange },
+                { key: 'FN', label: 'False Negative', count: closedUnderCounts['FN'], color: colors.red }
+            ];
+            diagItems.forEach(item => {
+                const pct = totalClosedUnder > 0 ? ((item.count / totalClosedUnder) * 100).toFixed(1) + '%' : '0.0%';
+                const isActive = filters['Closed Under'] === item.key;
+                const div = document.createElement('div');
+                div.className = `legend-item ${isActive ? 'active-filter' : ''}`;
+                div.innerHTML = `<div class="diag-info"><div class="legend-head">${item.key}</div><div><span class="legend-dot" style="background:${item.color}"></span><span class="legend-val" style="font-size:0.9rem;">${pct}</span></div></div><div class="legend-val">${item.count}</div>`;
+                div.onclick = () => toggleFilter('Closed Under', item.key);
+                legendContainer.appendChild(div);
             });
             
             renderSavedChart();
@@ -1088,199 +877,90 @@
         function renderSavedChart() {
             const selectedFY = document.getElementById('optFY').value;
             const fyData = filteredData.filter(r => r._fy === selectedFY && r._saved > 0);
-            
             const monthOrder = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
             const savedByMonth = new Array(12).fill(0);
             let totalSaved = 0;
-
-            fyData.forEach(r => {
-                if(r._dateObj) {
-                    let mIndex = r._dateObj.getMonth();
-                    let sortIndex = (mIndex >= 3) ? mIndex - 3 : mIndex + 9;
-                    savedByMonth[sortIndex] += r._saved;
-                    totalSaved += r._saved;
-                }
-            });
-            
+            fyData.forEach(r => { if(r._dateObj) { let mIndex = r._dateObj.getMonth(); let sortIndex = (mIndex >= 3) ? mIndex - 3 : mIndex + 9; savedByMonth[sortIndex] += r._saved; totalSaved += r._saved; } });
             document.getElementById('valTotalSaved').innerText = totalSaved + 'h';
-
             const ctx = document.getElementById('cSaved').getContext('2d');
             if(savedChartInstance) savedChartInstance.destroy();
-
-            const isDark = document.body.classList.contains('dark-mode');
-            const txtColor = isDark ? '#cbd5e1' : '#475569';
-            
-            const gradPurple = ctx.createLinearGradient(0,0,0,400);
-            gradPurple.addColorStop(0, '#a78bfa');
-            gradPurple.addColorStop(1, '#7c3aed');
-
+            const txtColor = document.body.classList.contains('dark-mode') ? '#cbd5e1' : '#64748b';
             savedChartInstance = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: monthOrder,
-                    datasets: [{
-                        label: 'Hours Saved',
-                        data: savedByMonth,
-                        backgroundColor: gradPurple,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            color: txtColor,
-                            anchor: 'end',
-                            align: 'top',
-                            font: { weight: 'bold' },
-                            formatter: (v) => v > 0 ? v : ''
-                        }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, grid: { display: false }, ticks: { color: txtColor } }, 
-                        x: { grid: { display: false }, ticks: { color: txtColor } } 
-                    }
-                }
+                data: { labels: monthOrder, datasets: [{ label: 'Hours Saved', data: savedByMonth, backgroundColor: '#8b5cf6', borderRadius: 50, barThickness: 15 }] },
+                plugins: [ChartDataLabels],
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: txtColor, anchor: 'end', align: 'top', formatter: (v) => v > 0 ? v : '' } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
             });
         }
 
-        // FIXED DRAWCHART FUNCTION TO MATCH OLD LOGIC
-        function drawChart(id, type, data, filterKey, extraOptions = {}) {
+        function drawChart(id, type, data, filterKey, extraOptions={}){
             const ctx = document.getElementById(id).getContext('2d');
-            if (charts[id]) charts[id].destroy();
+            if(charts[id]) charts[id].destroy();
+            const defaultScales = (type === 'doughnut') ? {} : { x: { display: extraOptions.indexAxis !== 'y', grid: { display:false } }, y: { display: extraOptions.indexAxis === 'y', grid: { display:false } } };
+            const scales = extraOptions.scales || defaultScales;
 
-            // Base Config
-            const config = {
-                type: type,
-                data: data,
+            charts[id] = new Chart(ctx, {
+                type: type, data: data, plugins: [ChartDataLabels],
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    maxBarThickness: 30,
-                    interaction: extraOptions.interaction || {
-                        mode: 'nearest',
-                        axis: extraOptions.indexAxis === 'y' ? 'y' : 'x',
-                        intersect: false
-                    },
+                    ...extraOptions, responsive: true, maintainAspectRatio: false, 
+                    interaction: { mode: 'nearest', axis: extraOptions.indexAxis === 'y' ? 'y' : 'x', intersect: true },
                     plugins: {
                         legend: { display: type !== 'bar' && type !== 'doughnut' },
-                        tooltip: { enabled: true }, // Ensure tooltips are enabled
                         datalabels: {
                             color: document.body.classList.contains('dark-mode') ? '#fff' : '#333',
                             font: { weight: 'bold', size: 10 },
                             display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0,
                             align: type === 'line' ? 'top' : 'center',
                             formatter: (v) => v
-                        }
+                        },
+                        ...(extraOptions.plugins || {})
                     },
-                    scales: (type === 'doughnut') ? {} : {
-                        x: { display: extraOptions.indexAxis !== 'y', grid: { display: false } },
-                        y: { display: extraOptions.indexAxis === 'y', grid: { display: false } }
-                    },
-                    onClick: extraOptions.onClick, // Specific chart click
-                    onHover: extraOptions.onHover
+                    scales: scales,
+                    onClick: (e, el) => { if (el.length && filterKey) { const idx = el[0].index; const val = (extraOptions.filterValues) ? extraOptions.filterValues[idx] : data.labels[idx]; toggleFilter(filterKey, val); } },
+                    onHover: (e, el) => { e.native.target.style.cursor = el[0] ? 'pointer' : 'default'; if(extraOptions.onHover) extraOptions.onHover(e, el); }
                 }
-            };
-
-            // Manual Deep Merge for Plugins
-            if (extraOptions.plugins) {
-                if (extraOptions.plugins.legend) config.options.plugins.legend = { ...config.options.plugins.legend, ...extraOptions.plugins.legend };
-                if (extraOptions.plugins.tooltip) config.options.plugins.tooltip = { ...config.options.plugins.tooltip, ...extraOptions.plugins.tooltip };
-                if (extraOptions.plugins.datalabels) config.options.plugins.datalabels = { ...config.options.plugins.datalabels, ...extraOptions.plugins.datalabels };
-            }
-            
-            // Other overrides
-            if (extraOptions.scales) config.options.scales = extraOptions.scales;
-            if (extraOptions.layout) config.options.layout = extraOptions.layout;
-            if (extraOptions.indexAxis) config.options.indexAxis = extraOptions.indexAxis;
-
-            // Default click handler if none provided
-            if (!config.options.onClick && filterKey) {
-                config.options.onClick = (e, elements) => {
-                    if (elements.length) {
-                        const idx = elements[0].index;
-                        const val = extraOptions.filterValues ? extraOptions.filterValues[idx] : data.labels[idx];
-                        setTimeout(() => toggleFilter(filterKey, val), 0);
-                    }
-                };
-            }
-
-            // Hover cursor
-            config.options.onHover = (e, el) => {
-                e.native.target.style.cursor = el[0] ? 'pointer' : 'default';
-                if (extraOptions.onHover) extraOptions.onHover(e, el);
-            };
-
-            if (type === 'bar') {
-                data.datasets.forEach(ds => {
-                   if(ds.barPercentage === undefined) ds.barPercentage = 0.9;
-                   if(ds.categoryPercentage === undefined) ds.categoryPercentage = 0.9;
-                });
-            }
-
-            charts[id] = new Chart(ctx, config);
+            });
         }
 
         function renderWidgets(){
-            const faults={};
-            filteredData.forEach(r=>{
-                if(r['Issue On Short']) r['Issue On Short'].split(',').forEach(i=>{const x=i.trim(); if(x) faults[x]=(faults[x]||0)+1;});
-            });
+            const faults={}; filteredData.forEach(r=>{ if(r['Issue On Short']) r['Issue On Short'].split(',').forEach(i=>{const x=i.trim(); if(x) faults[x]=(faults[x]||0)+1;}); });
             const fList=document.getElementById('faultList'); fList.innerHTML='';
             Object.entries(faults).sort((a,b)=>b[1]-a[1]).forEach(([f,c])=>{
-                let icon='fa-exclamation-circle';
-                for(const [k,v] of Object.entries(ICONS))if(f.includes(k))icon=v;
-                fList.innerHTML+=`<div class="fault-pill ${filters['Fault']===f?'active':''}" onclick="toggleFilter('Fault','${f}')"><span><i class="fas ${icon}" style="color:var(--c-teal); margin-right:5px"></i>${f}</span><b>${c}</b></div>`;
+                let icon='fa-triangle-exclamation'; for(const [k,v] of Object.entries(ICONS))if(f.includes(k))icon=v;
+                fList.innerHTML+=`<div class="fault-pill ${filters['Fault']===f?'active':''}" onclick="toggleFilter('Fault','${f}')"><span><i class="fas ${icon}" style="margin-right:8px; opacity:0.7;"></i>${f}</span><b>${c}</b></div>`;
             });
 
             const buckets={'0-15 Days':0,'15-30 Days':0,'30-60 Days':0,'> 60 Days':0};
-            filteredData.forEach(r=>{
-                if(r._drs!=='Completed'){
-                    if(r._daysOld<=15)buckets['0-15 Days']++;
-                    else if(r._daysOld<=30)buckets['15-30 Days']++;
-                    else if(r._daysOld<=60)buckets['30-60 Days']++;
-                    else buckets['> 60 Days']++;
-                }
-            });
-            const tAge=document.getElementById('tAge'); tAge.innerHTML=`<tr><th>Group</th><th>Count</th></tr>`;
-            const clr=['#dcfce7','#fef9c3','#ffedd5','#fee2e2'];
-            const clrDark = ['#064e3b', '#713f12', '#7f1d1d', '#450a0a'];
-            const isDark = document.body.classList.contains('dark-mode');
-            const palette = isDark ? clrDark : clr;
-
+            filteredData.forEach(r=>{ if(r._drs!=='Completed'){ if(r._daysOld<=15)buckets['0-15 Days']++; else if(r._daysOld<=30)buckets['15-30 Days']++; else if(r._daysOld<=60)buckets['30-60 Days']++; else buckets['> 60 Days']++; } });
+            const tAge=document.getElementById('tAge'); tAge.innerHTML='';
+            const palette = ['#10b981', '#f59e0b', '#f43f5e', '#881337'];
             Object.entries(buckets).forEach(([k,v],i)=>{
                 if(v>0) {
                     const activeClass = filters['Age'] === k ? 'active' : '';
-                    tAge.innerHTML+=`<tr class="age-row ${activeClass}" style="background:${palette[i]}" onclick="toggleFilter('Age', '${k}')"><td>${k}</td><td><b>${v}</b></td></tr>`;
+                    tAge.innerHTML+=`<tr class="age-row ${activeClass}" onclick="toggleFilter('Age', '${k}')"><td><i class="fas fa-circle" style="color:${palette[i]}; font-size:0.6rem; margin-right:8px;"></i>${k}</td><td style="text-align:right; font-weight:700;">${v}</td></tr>`;
                 }
             });
 
             let ana = 0, ai = 0;
-            filteredData.forEach(r => {
-                const val = (r['Isssued By'] || r['Report Issued By'] || '').trim();
-                if(val.toLowerCase().endsWith('@infinite-uptime.com')) ana++;
-                else if(val.toUpperCase().includes('NITY')) ai++;
-            });
-            document.getElementById('valAnalyst').innerText = ana;
-            document.getElementById('valAI').innerText = ai;
+            filteredData.forEach(r => { const val = (r['Isssued By'] || r['Report Issued By'] || '').trim(); if(val.toLowerCase().endsWith('@infinite-uptime.com')) ana++; else if(val.toUpperCase().includes('NITY')) ai++; });
+            document.getElementById('valAnalyst').innerText = ana; document.getElementById('valAI').innerText = ai;
 
+            // --- FIXED: Action Registry (No Bold Tags) ---
             const tbody=document.querySelector('#tList tbody'); tbody.innerHTML='';
             filteredData.slice(0,50).forEach(r=>{
-                let trendIcon = '';
-                const trendVal = (r.Trend || '').toLowerCase();
-                if(trendVal.includes('increas')) trendIcon = '<i class="fas fa-arrow-trend-up" style="color:var(--c-red); margin-left:5px;" title="Increasing"></i>';
-                else if(trendVal.includes('decreas')) trendIcon = '<i class="fas fa-arrow-trend-down" style="color:var(--c-green); margin-left:5px;" title="Decreasing"></i>';
-                else if(trendVal.includes('stable')) trendIcon = '<i class="fas fa-minus" style="color:#64748b; margin-left:5px;" title="Stable"></i>';
-
+                let trendIcon = ''; const trendVal = (r.Trend || '').toLowerCase();
+                if(trendVal.includes('increas')) trendIcon = '<i class="fas fa-arrow-trend-up" style="color:var(--accent-red); margin-left:5px;"></i>';
+                else if(trendVal.includes('decreas')) trendIcon = '<i class="fas fa-arrow-trend-down" style="color:var(--accent-green); margin-left:5px;"></i>';
+                else if(trendVal.includes('stable')) trendIcon = '<i class="fas fa-minus" style="color:var(--text-muted); margin-left:5px; font-size:0.7rem;"></i>';
+                
+                // Using font-weight: 600 instead of <b>
                 tbody.innerHTML+=`
                     <tr>
                         <td>${r.Date}</td>
                         <td>${r.Plant}</td>
-                        <td>${r['Equipment Name']} ${trendIcon}</td>
-                        <td>${r['Recommended Actions']}</td>
-                        <td>${r['Remarks'] || '-'}</td>
+                        <td style="font-weight:600; color:var(--text-main);">${r['Equipment Name']} ${trendIcon}</td>
+                        <td style="font-weight:600; color:var(--text-main);">${r['Recommended Actions']}</td>
+                        <td style="color:var(--text-muted); font-size:0.75rem;">${r['Remarks'] || '-'}</td>
                     </tr>`;
             });
         }
@@ -1289,66 +969,40 @@
             const units = {}; rawData.forEach(r=> { if(r._unit && r._unit !=='Unknown') units[r._unit] = (units[r._unit]||0)+1; });
             const uCont = document.getElementById('unitListContainer'); uCont.innerHTML = '';
             Object.keys(units).sort().forEach(u => {
-                uCont.innerHTML += `
-                    <div class="filter-card unit-card ${filters['Unit']===u?'active':''}" onclick="toggleFilter('Unit','${u}')">
-                        <div class="icon-box"><i class="fas fa-building unit-icon"></i></div>
-                        <div class="card-info"><span class="card-name">${u}</span><span class="card-count">${units[u]} Reports</span></div>
-                    </div>`;
+                uCont.innerHTML += `<div class="filter-card unit-card ${filters['Unit']===u?'active':''}" onclick="toggleFilter('Unit','${u}')"><div class="icon-box"><i class="fas fa-building-columns unit-icon"></i></div><div class="card-info"><span class="card-name">${u}</span><span class="card-count">${units[u]} Reports</span></div></div>`;
             });
-
-            const zones={}; 
-            rawData.filter(r => !filters['Unit'] || r._unit === filters['Unit']).forEach(r=>zones[r._zone]=(zones[r._zone]||0)+1);
-            
+            const zones={}; rawData.filter(r => !filters['Unit'] || r._unit === filters['Unit']).forEach(r=>zones[r._zone]=(zones[r._zone]||0)+1);
             const cont=document.getElementById('zoneListContainer'); cont.innerHTML='';
             Object.keys(zones).sort().forEach(z=>{
                 let cls='', icon='fa-industry';
-                if(z.includes('IRON')){cls='zone-iron';icon='fa-fire';}
-                else if(z.includes('STEEL')){cls='zone-steel';icon='fa-layer-group';}
-                else if(z.includes('PROCESS')){cls='zone-process';icon='fa-cogs';}
-                cont.innerHTML+=`
-                    <div class="filter-card zone-card ${cls} ${filters['Zone']===z?'active':''}" onclick="toggleFilter('Zone','${z}')">
-                        <div class="icon-box"><i class="fas ${icon}"></i></div>
-                        <div class="card-info"><span class="card-name">${z}</span><span class="card-count">${zones[z]} Reports</span></div>
-                    </div>`;
+                if(z.includes('IRON')){cls='zone-iron';icon='fa-fire';} else if(z.includes('STEEL')){cls='zone-steel';icon='fa-layer-group';} else if(z.includes('PROCESS')){cls='zone-process';icon='fa-gears';}
+                cont.innerHTML+=`<div class="filter-card zone-card ${cls} ${filters['Zone']===z?'active':''}" onclick="toggleFilter('Zone','${z}')"><div class="icon-box"><i class="fas ${icon}"></i></div><div class="card-info"><span class="card-name">${z}</span><span class="card-count">${zones[z]} Reports</span></div></div>`;
             });
         }
 
         function renderFilterTags(){
             const c=document.getElementById('activeFilters'); c.innerHTML='';
-            Object.entries(filters).forEach(([k,v])=>{c.innerHTML+=`<div class="filter-tag">${k}: ${v} <i class="fas fa-times" style="cursor:pointer" onclick="toggleFilter('${k}','${v}')"></i></div>`;});
+            Object.entries(filters).forEach(([k,v])=>{c.innerHTML+=`<div class="filter-tag">${k}: ${v} <i class="fas fa-xmark" style="cursor:pointer; opacity:0.8;" onclick="toggleFilter('${k}','${v}')"></i></div>`;});
         }
-        function checkAutoMap(){
-            const p=[...new Set(rawData.map(r=>r.Plant))].sort(); const c=document.getElementById('mappingContainer'); c.innerHTML='';
-            p.forEach(pl=>{
-                const cur=manualZoneMap[pl]||''; let o=`<option value="">Use CSV Default</option>`;
-                ZONES_DEFAULT.forEach(z=>o+=`<option value="${z}" ${cur===z?'selected':''}>${z}</option>`);
-                c.innerHTML+=`<div class="map-row"><span>${pl}</span><select id="map_${pl}">${o}</select></div>`;
-            });
-        }
+        function checkAutoMap(){ const p=[...new Set(rawData.map(r=>r.Plant))].sort(); const c=document.getElementById('mappingContainer'); c.innerHTML=''; p.forEach(pl=>{ const cur=manualZoneMap[pl]||''; let o=`<option value="">Use CSV Default</option>`; ZONES_DEFAULT.forEach(z=>o+=`<option value="${z}" ${cur===z?'selected':''}>${z}</option>`); c.innerHTML+=`<div class="map-row"><span>${pl}</span><select id="map_${pl}">${o}</select></div>`; }); }
         function openSettings(){document.getElementById('settingsModal').style.display='flex';}
         function closeSettings(){document.getElementById('settingsModal').style.display='none';}
-        function saveMappings(){
-            document.querySelectorAll('[id^="map_"]').forEach(i=>{if(i.value)manualZoneMap[i.id.replace('map_','')]=i.value;else delete manualZoneMap[i.id.replace('map_','')];});
-            localStorage.setItem('mtr_manual_map',JSON.stringify(manualZoneMap)); closeSettings(); processData(); renderSidebar(); applyFilters();
-        }
+        function saveMappings(){ document.querySelectorAll('[id^="map_"]').forEach(i=>{if(i.value)manualZoneMap[i.id.replace('map_','')]=i.value;else delete manualZoneMap[i.id.replace('map_','')];}); localStorage.setItem('mtr_manual_map',JSON.stringify(manualZoneMap)); closeSettings(); processData(); renderSidebar(); applyFilters(); }
 
         function initTimelineFilters() {
             const plants = [...new Set(rawData.map(r => r.Plant))].sort();
-            const pSelect = document.getElementById('tl-plant');
-            pSelect.innerHTML = '<option value="">Select Plant...</option>';
+            const pSelect = document.getElementById('tl-plant'); pSelect.innerHTML = '<option value="">Select Plant...</option>';
             plants.forEach(p => pSelect.innerHTML += `<option value="${p}">${p}</option>`);
         }
         function filterTimelineEquipment() {
             const selectedPlant = document.getElementById('tl-plant').value;
-            const eSelect = document.getElementById('tl-equip');
-            eSelect.innerHTML = '<option value="">Select Equipment...</option>';
+            const eSelect = document.getElementById('tl-equip'); eSelect.innerHTML = '<option value="">Select Equipment...</option>';
             if (!selectedPlant) return;
             const equips = [...new Set(rawData.filter(r => r.Plant === selectedPlant).map(r => r['Equipment Name']))].sort();
             equips.forEach(e => eSelect.innerHTML += `<option value="${e}">${e}</option>`);
         }
         function renderTimeline() {
-            const plant = document.getElementById('tl-plant').value;
-            const equip = document.getElementById('tl-equip').value;
+            const plant = document.getElementById('tl-plant').value; const equip = document.getElementById('tl-equip').value;
             const container = document.getElementById('timeline-container');
             if (!plant || !equip) { container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:30px;">Select a Plant and Equipment to view history.</div>'; return; }
             const history = rawData.filter(r => r.Plant === plant && r['Equipment Name'] === equip);
@@ -1358,16 +1012,19 @@
             history.forEach(r => {
                 const critClass = (r.Criticality === 'Critical') ? 'critical' : (r.Criticality === 'Marginal' ? 'marginal' : '');
                 let actionHTML = '';
-                if (r['Corrective Action Taken']) {
-                    actionHTML = `<div class="tl-action-box"><div class="tl-action-date">Action Taken: ${r['Action Taken Date'] || 'Unknown Date'}</div><div class="tl-action-text">${r['Corrective Action Taken']}</div></div>`;
-                }
+                if (r['Corrective Action Taken']) { actionHTML = `<div class="tl-action-box"><div class="tl-action-date">Action Taken: ${r['Action Taken Date'] || 'Unknown Date'}</div><div class="tl-action-text">${r['Corrective Action Taken']}</div></div>`; }
+                
+                // --- FIXED: Timeline Date Layout ---
                 container.innerHTML += `
                     <div class="tl-item ${critClass}">
                         <span class="tl-dot"></span>
                         <div class="tl-content">
-                            <div class="tl-date"><span><i class="far fa-calendar"></i> ${r.Date}</span><span style="font-size:0.75rem; text-transform:uppercase;">${r.Criticality || 'Normal'}</span></div>
-                            <div class="tl-obs">${r.Observation || 'No Observation'}</div>
-                            <div class="tl-rec"><i class="fas fa-tools"></i> ${r['Recommended Actions'] || 'No Recommendation'}</div>
+                            <div class="tl-date">
+                                <span><i class="far fa-calendar"></i> ${r.Date}</span>
+                                <span style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-main);">${r.Criticality || 'Normal'}</span>
+                            </div>
+                            <div class="tl-obs" style="margin-top:5px; font-size:1.1rem;">${r.Observation || 'No Observation'}</div>
+                            <div class="tl-rec" style="margin-top:5px; color:var(--text-muted);"><i class="fas fa-screwdriver-wrench" style="margin-right:5px;"></i> ${r['Recommended Actions'] || 'No Recommendation'}</div>
                             ${actionHTML}
                         </div>
                     </div>`;
@@ -1375,25 +1032,13 @@
         }
 
         async function exportPDF() {
-            document.body.classList.add('print-mode');
-            window.dispatchEvent(new Event('resize'));
+            document.body.classList.add('print-mode'); window.dispatchEvent(new Event('resize'));
             await new Promise(resolve => setTimeout(resolve, 800));
-
             const element = document.querySelector('.main');
             const orientation = (currentView === 'dashboard') ? 'landscape' : 'portrait';
-
-            const opt = {
-                margin: 5,
-                filename: currentView === 'dashboard' ? 'MTR_Dashboard.pdf' : 'Equipment_History.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: orientation },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            };
-
+            const opt = { margin: 5, filename: currentView === 'dashboard' ? 'MTR_Analytics.pdf' : 'Equipment_History.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, scrollY: 0 }, jsPDF: { unit: 'mm', format: 'a4', orientation: orientation }, pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } };
             await html2pdf().set(opt).from(element).save();
-            document.body.classList.remove('print-mode');
-            window.dispatchEvent(new Event('resize'));
+            document.body.classList.remove('print-mode'); window.dispatchEvent(new Event('resize'));
         }
     </script>
 </body>
