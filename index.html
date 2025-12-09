@@ -138,31 +138,88 @@
 
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; width: 100%; }
         
+        /* Ultra Slim Top Bar */
         .top-bar { 
             background: var(--bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            padding: 16px 30px; display: flex; align-items: center; justify-content: space-between; 
+            padding: 8px 30px; 
+            display: flex; align-items: center; justify-content: space-between; 
             position: sticky; top: 0; z-index: 40; flex-shrink: 0; border-bottom: 1px solid var(--border-color);
+            height: 50px; 
         }
         
-        .page-header-title { font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-right: 20px; letter-spacing: -0.02em; }
-        .top-icon-btn { background:transparent; border:none; cursor:pointer; font-size:1.1rem; color: var(--text-muted); margin-left:12px; padding: 8px; border-radius: 8px; transition: 0.2s; }
+        .top-left {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .page-header-title { 
+            font-size: 1.1rem; 
+            font-weight: 800; 
+            color: var(--text-main); 
+            margin-right: 15px; 
+            letter-spacing: -0.02em; 
+            white-space: nowrap;
+        }
+        
+        .top-icon-btn { background:transparent; border:none; cursor:pointer; font-size:1rem; color: var(--text-muted); margin-left:10px; padding: 6px; border-radius: 8px; transition: 0.2s; }
         .top-icon-btn:hover { background: var(--bg-body); color: var(--accent-teal); }
         
-        .last-update { background: var(--bg-body); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px; }
+        .last-update { background: var(--bg-body); color: var(--text-main); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-right: 10px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px; }
         .last-update i { color: var(--accent-teal); }
         
-        .filters-active { display: flex; gap: 8px; margin-left: 15px; overflow-x: auto; padding-bottom: 2px; }
-        .filter-tag { background: var(--text-main); color: var(--bg-body); padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-
-        .top-stats-container { display: flex; gap: 20px; padding: 30px 30px 10px 30px; flex-wrap: wrap; }
-        .kpi-row { flex-grow: 1; display: flex; gap: 20px; flex-wrap: wrap; }
-        
-        .kpi-card { 
-            flex: 1 1 180px; background: var(--bg-card); border-radius: 16px; padding: 20px; 
-            box-shadow: var(--shadow-card); cursor: pointer; transition: all 0.3s;
-            position: relative; overflow: hidden; border: 1px solid transparent;
+        .filters-active { 
+            display: flex; gap: 8px; margin-left: 0; 
+            overflow-x: auto; padding-bottom: 0; 
+            align-items: center;
+            height: 100%;
         }
-        .kpi-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+        .filters-active::-webkit-scrollbar { display: none; }
+        
+        .filter-tag { 
+            background: var(--text-main); color: var(--bg-body); 
+            padding: 4px 10px; 
+            border-radius: 20px; font-size: 0.7rem; font-weight: 600; 
+            display: flex; align-items: center; gap: 6px; flex-shrink: 0; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+
+        /* Sticky Container for KPIs */
+        .top-stats-container { 
+            display: flex; 
+            gap: 15px; 
+            padding: 10px 30px 5px 30px; 
+            flex-wrap: wrap; 
+            
+            position: sticky;
+            top: 50px; 
+            z-index: 30; 
+            background: var(--bg-body); 
+            border-bottom: 1px solid var(--border-color); 
+            backdrop-filter: blur(5px); 
+        }
+        
+        .kpi-row { flex-grow: 1; display: flex; gap: 10px; flex-wrap: wrap; }
+        
+        /* Ultra Slim KPI Cards */
+        .kpi-card { 
+            flex: 1 1 150px; 
+            background: var(--bg-card); 
+            border-radius: 12px; 
+            padding: 8px 12px; 
+            box-shadow: var(--shadow-card); 
+            cursor: pointer; 
+            transition: all 0.3s;
+            position: relative; 
+            overflow: hidden; 
+            border: 1px solid transparent;
+            min-height: 60px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
         .kpi-card.active { border-color: currentColor; background: var(--bg-card); }
         .kpi-card.active::after { content:''; position: absolute; inset: 0; background: currentColor; opacity: 0.05; pointer-events: none; }
 
@@ -174,10 +231,13 @@
 
         /* KPI Icons */
         .kpi-icon-bg { 
-            position: absolute; right: 20px; top: 20px; 
-            width: 45px; height: 45px; border-radius: 12px; 
+            position: absolute; 
+            right: 10px; top: 50%; 
+            transform: translateY(-50%); 
+            width: 32px; height: 32px; 
+            border-radius: 8px; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 1.2rem;
+            font-size: 0.9rem; 
         }
         .k-gen .kpi-icon-bg { background: var(--bg-body); color: var(--text-muted); }
         .k-comp .kpi-icon-bg { background: var(--accent-green-soft); color: var(--accent-green); }
@@ -185,20 +245,43 @@
         .k-pend .kpi-icon-bg { background: var(--accent-red-soft); color: var(--accent-red); }
         .k-plan .kpi-icon-bg { background: var(--accent-blue-soft); color: var(--accent-blue); }
 
-        .kpi-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8; margin-bottom: 8px; }
-        .kpi-num { font-size: 2rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+        .kpi-title { 
+            font-size: 0.65rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            opacity: 0.7; 
+            margin-bottom: 0px; 
+        }
+        .kpi-num { 
+            font-size: 1.4rem; 
+            font-weight: 800; 
+            line-height: 1.1; 
+            letter-spacing: -0.03em; 
+        }
         
-        .issuer-card { flex: 0 0 220px; background: var(--bg-card); border-radius: 16px; padding: 15px 20px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; justify-content: center; }
-        .issuer-header { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
-        .issuer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .issuer-val { font-weight: 700; color: var(--text-main); }
+        .issuer-card { 
+            flex: 0 0 180px; 
+            background: var(--bg-card); 
+            border-radius: 12px; 
+            padding: 8px 12px; 
+            box-shadow: var(--shadow-card); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            min-height: 60px;
+        }
+        .issuer-header { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
+        .issuer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; font-size: 0.75rem; }
+        .issuer-val { font-weight: 700; color: var(--text-main); font-size: 0.8rem; }
 
         .chart-split-wrapper { display: flex; align-items: center; height: 100%; padding: 0 10px; gap: 20px; }
-        .chart-split-left { position: relative; width: 45%; height: 180px; display: flex; justify-content: center; align-items: center; }
+        /* Height matched to standard charts */
+        .chart-split-left { position: relative; width: 45%; height: 145px; display: flex; justify-content: center; align-items: center; }
         .chart-split-right { width: 55%; display: flex; flex-direction: column; gap: 10px; justify-content: center; }
         
         .legend-item { 
-            background: var(--bg-body); border-radius: 12px; padding: 10px 14px; 
+            background: var(--bg-body); border-radius: 12px; padding: 6px 10px; margin-bottom: 4px;
             display: flex; justify-content: space-between; align-items: center; 
             cursor: pointer; transition: all 0.2s; border: 1px solid transparent; 
         }
@@ -206,56 +289,91 @@
         .legend-item.active-filter { border-color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .legend-head { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
         .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
-        .legend-val { font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
+        .legend-val { font-size: 0.9rem; font-weight: 800; color: var(--text-main); }
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px 30px 50px 30px; }
-        .d-card { background: var(--bg-card); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; min-width: 0; width: 100%; height: 100%; transition: transform 0.3s; }
+        .dashboard-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 10px; 
+            padding: 10px 15px 20px 15px; 
+        }
+
+        .d-card { 
+            background: var(--bg-card); 
+            border-radius: 12px; 
+            padding: 10px 12px; 
+            box-shadow: var(--shadow-card); 
+            display: flex; 
+            flex-direction: column; 
+            min-width: 0; 
+            width: 100%; 
+            height: 100%; 
+        }
         .d-card:hover { box-shadow: var(--shadow-hover); }
 
-        .card-head { font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 20px; display:flex; justify-content:space-between; align-items: center; letter-spacing: -0.01em; }
+        .card-head { 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            margin-bottom: 8px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
         .card-head small { font-weight: 400; color: var(--text-muted); font-size: 0.75rem; }
 
         .chart-box { position: relative; width: 100%; flex-grow: 1; min-height: 0; } 
         canvas { width: 100% !important; height: 100% !important; }
-        .cb-standard { height: 260px; } .cb-tall { height: 460px; } 
+        
+        /* --- CHANGED: HEIGHT CONFIGURATIONS --- */
+        .cb-standard { height: 145px; } 
+        .cb-tall { height: 280px; }     
 
         .a-dept { grid-column: span 2; } .a-cat { grid-column: span 1; } .a-equip { grid-column: span 1; } 
         .a-crit { grid-column: span 1; } .a-age { grid-column: span 1; } .a-act-taken { grid-column: span 1; } 
         .a-top-equip { grid-column: span 1; grid-row: span 2; } 
         .a-fault { grid-column: span 1; } .a-closed-under { grid-column: span 1; } .a-top-area { grid-column: span 1; }
         .a-trend { grid-column: span 2; } .a-saved { grid-column: span 2; } 
-        .a-list { grid-column: span 4; height: 400px; overflow: hidden; } 
+        
+        /* --- CHANGED: Table Height Increased --- */
+        .a-list { grid-column: span 4; height: 360px; overflow: hidden; } 
 
         .view-section { display: none; }
         .view-section.active-view { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- FIXED: Fault Grid & Badges --- */
         .fault-grid { 
-            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; 
-            height: 100%; /* Fill container */
-            overflow-y: auto; padding-right: 5px; 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 4px; 
+            height: 100%; 
+            overflow-y: auto; 
+            padding-right: 2px; 
+            align-content: start; 
         }
         .fault-pill { 
-            background: var(--bg-body); padding: 8px 12px; border-radius: 8px; 
+            padding: 4px 8px; 
+            font-size: 0.75rem; 
+            border-radius: 6px; 
             display: flex; justify-content: space-between; align-items: center; 
-            font-size: 0.8rem; cursor: pointer; color: var(--text-main); 
+            cursor: pointer; color: var(--text-main); 
             font-weight: 500; transition: 0.2s; border: 1px solid transparent; 
         }
         .fault-pill:hover, .fault-pill.active { background: var(--accent-teal-soft); color: var(--accent-teal); }
         
-        /* Fixed Badge Contrast for Dark Mode */
         .fault-pill b { 
             background: rgba(0,0,0,0.08); 
             padding: 2px 7px; border-radius: 6px; 
             font-size: 0.75rem; color: var(--text-main); 
         }
-        body.dark-mode .fault-pill b { 
-            background: rgba(255,255,255,0.1); 
-            color: #fff; 
-        }
+        body.dark-mode .fault-pill b { background: rgba(255,255,255,0.1); color: #fff; }
 
-        .age-row { cursor: pointer; transition: 0.2s; color: var(--text-main); border-radius: 8px; } .age-row td { padding: 10px 8px; border-bottom: 1px solid var(--bg-body); }
+        .age-row { cursor: pointer; transition: 0.2s; color: var(--text-main); border-radius: 8px; } 
+        .age-row td { 
+            padding: 6px 8px; 
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--bg-body); 
+        }
         .age-row:hover { background: var(--bg-body); } .age-row.active { box-shadow: inset 4px 0 0 var(--accent-teal); background: var(--bg-body); font-weight: 700; }
         
         table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.85rem; } 
@@ -266,7 +384,7 @@
         .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; } 
         .dc-val { font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1; letter-spacing: -0.02em; }
 
-        /* --- FIXED: Timeline Alignment --- */
+        /* Timeline Styles */
         .timeline-wrapper { padding: 20px 30px; }
         .tl-controls { display: flex; gap: 15px; margin-bottom: 30px; background: var(--bg-card); padding: 20px; border-radius: 16px; box-shadow: var(--shadow-card); }
         .tl-select { padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; flex-grow: 1; font-size: 0.95rem; background: var(--bg-body); color: var(--text-main); outline: none; }
@@ -281,7 +399,7 @@
         
         .tl-date { 
             display: flex; 
-            justify-content: space-between; /* Push items to edges */
+            justify-content: space-between; 
             align-items: center; 
             width: 100%; 
             margin-bottom: 8px;
@@ -420,9 +538,10 @@
                     <div class="card-head">Category Distribution</div>
                     <div class="chart-box cb-standard"><canvas id="cCat"></canvas></div>
                 </div>
-                <div class="d-card a-equip">
-                    <div class="card-head">Equipment Type</div>
-                    <div class="chart-box cb-standard"><canvas id="cEquip"></canvas></div>
+                
+                <div class="d-card a-fault">
+                    <div class="card-head">Fault Distribution</div>
+                    <div class="fault-grid" id="faultList"></div>
                 </div>
 
                 <div class="d-card a-crit">
@@ -453,9 +572,9 @@
                     <div class="chart-box cb-tall"><canvas id="cTopEquip"></canvas></div>
                 </div>
 
-                <div class="d-card a-fault">
-                    <div class="card-head">Fault Distribution</div>
-                    <div class="fault-grid" id="faultList"></div>
+                <div class="d-card a-equip">
+                    <div class="card-head">Equipment Type</div>
+                    <div class="chart-box cb-standard"><canvas id="cEquip"></canvas></div>
                 </div>
                 
                 <div class="d-card a-closed-under">
@@ -476,7 +595,7 @@
 
                 <div class="d-card a-trend">
                     <div class="card-head">7-Day Trend Analysis</div>
-                    <div class="chart-box cb-standard"><canvas id="cTrend"></canvas></div>
+                    <div class="chart-box cb-tall"><canvas id="cTrend"></canvas></div>
                 </div>
                 <div class="d-card a-saved">
                     <div class="card-head">
@@ -487,7 +606,7 @@
                             <span id="valTotalSaved" style="font-weight:800; color:var(--accent-purple); font-size:1rem;">0h</span>
                         </div>
                     </div>
-                    <div class="chart-box cb-standard"><canvas id="cSaved"></canvas></div>
+                    <div class="chart-box cb-tall"><canvas id="cSaved"></canvas></div>
                 </div>
 
                 <div class="d-card a-list">
@@ -733,8 +852,8 @@
             drawChart('cDept', 'bar', {
                 labels:plants,
                 datasets:[
-                    {label:'Critical',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),backgroundColor:colors.red, stack:'0', borderRadius: 4, barPercentage: 0.6},
-                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:colors.orange, stack:'0', borderRadius: 4, barPercentage: 0.6}
+                    {label:'Critical',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),backgroundColor:colors.red, stack:'0', borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9},
+                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:colors.orange, stack:'0', borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9}
                 ]
             }, 'Plant', { scales: { x: { stacked: true }, y: { stacked: true, display: false } } });
 
@@ -747,7 +866,16 @@
             const equips=agg('Type');
             drawChart('cEquip', 'bar', {
                 labels:Object.keys(equips),
-                datasets:[{data:Object.values(equips),backgroundColor:colors.slate,label:'Count',indexAxis: 'y', borderRadius: 50, barThickness: 15}]
+                datasets:[{
+                    data:Object.values(equips),
+                    backgroundColor:colors.slate,
+                    label:'Count',
+                    indexAxis: 'y', 
+                    borderRadius: 50, 
+                    // Tighter Bar Settings
+                    barPercentage: 0.9, 
+                    categoryPercentage: 0.9
+                }]
             }, 'Type', { indexAxis: 'y' }); 
 
             // --- SPLIT CRITICALITY CHART ---
@@ -834,16 +962,24 @@
             const top10 = Object.entries(eqCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
             drawChart('cTopEquip', 'bar', {
                 labels: top10.map(i => i[0]), 
-                datasets: [{ label: 'Open Faults', data: top10.map(i => i[1]), backgroundColor: colors.red, indexAxis: 'y', borderRadius: 50, barThickness: 12 }]
-            }, 'Equipment Name', { indexAxis: 'y', layout: { padding: { left: 0 } }, scales: { x: { display: false }, y: { display: true, grid: { display: false } } } });
+                datasets: [{ label: 'Open Faults', data: top10.map(i => i[1]), backgroundColor: colors.red, indexAxis: 'y', borderRadius: 50, barThickness: 10 }]
+            }, 'Equipment Name', { indexAxis: 'y', layout: { padding: { left: 0 } }, scales: { x: { display: false }, y: { 
+            display: true, 
+            grid: { display: false },
+            ticks: { font: { size: 9 } } // Smaller font for axis labels
+        } 
+    } 
+});
 
             // Top 5 Areas
             const areaCounts = {}; data.forEach(r => { const key = `${r.Plant || 'Unknown'} - ${r.Area || 'Unknown'}`; areaCounts[key] = (areaCounts[key] || 0) + 1; });
             const top5Areas = Object.entries(areaCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
             drawChart('cTopArea', 'bar', {
                 labels: top5Areas.map(i => i[0]),
-                datasets: [{ label: 'Reports', data: top5Areas.map(i => i[1]), backgroundColor: colors.orange, indexAxis: 'y', borderRadius: 50, barThickness: 15 }]
-            }, 'AreaComposite', { indexAxis: 'y', layout: { padding: { left: 0 } }, scales: { x: { display: false }, y: { display: true } } });
+                datasets: [{ label: 'Reports', data: top5Areas.map(i => i[1]), backgroundColor: colors.orange, indexAxis: 'y', borderRadius: 50, barThickness: 12 }]
+            }, 'AreaComposite', { indexAxis: 'y', layout: { padding: { left: 0 } }, scales: { x: { display: false }, y: { display: true, ticks: { font: { size: 9 } } } 
+    } 
+});
 
             // Interactive Diagnosis Split
             const closedUnderCounts = { 'TP': 0, 'FP': 0, 'FN': 0 }; let totalClosedUnder = 0;
