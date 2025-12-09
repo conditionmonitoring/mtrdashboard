@@ -485,7 +485,7 @@
             </button>
             <div class="footer-credits">
                 MTR Analytics Suite v2.4<br>
-                <div style="margin-top:5px;">Engineered by <span class="dev-name">Sourav Biswal</span></div>
+                <div style="margin-top:5px;">Developed by <span class="dev-name">Sourav Biswal</span></div>
             </div>
         </div>
     </div>
@@ -584,7 +584,7 @@
                 </div>
                 
                 <div class="d-card a-top-equip">
-                    <div class="card-head" style="color:var(--accent-red)">Top 10 Bad Actors</div>
+                    <div class="card-head" style="color:var(--accent-red)">Top 10 Abnormal Equipment</div>
                     <div class="chart-box cb-tall"><canvas id="cTopEquip"></canvas></div>
                 </div>
 
@@ -629,7 +629,7 @@
                     <div class="card-head">Action Registry</div>
                     <div style="overflow-y:auto; height:100%;">
                         <table id="tList">
-                            <thead><tr><th>Date</th><th>Plant</th><th>Equip</th><th>Action</th><th>Remarks</th></tr></thead>
+                            <thead><tr><th>Date</th><th>Plant</th><th>Equipment</th><th>Recommended Corrective Action</th><th>Remarks</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -869,7 +869,7 @@
                 labels:plants,
                 datasets:[
                     {label:'Critical',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),backgroundColor:colors.red, stack:'0', borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9},
-                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:colors.yellow, stack:'0', borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9}
+                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:colors.orange, stack:'0', borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9}
                 ]
             }, 'Plant', { scales: { x: { stacked: true }, y: { stacked: true, display: false } } });
 
@@ -908,7 +908,7 @@
                 labels: ['Critical', 'Marginal', 'Normal'],
                 datasets: [{ 
                     data: [critCounts['Critical'], critCounts['Marginal'], critCounts['Normal']], 
-                    backgroundColor: [colors.red, colors.yellow, colors.slate], 
+                    backgroundColor: [colors.red, colors.orange, colors.slate], 
                     borderWidth: 0, hoverOffset: 4 
                 }]
             }, 'Criticality', { cutout: '75%', borderRadius: 20, plugins: { legend: { display: false }, datalabels: { display: false } } });
@@ -917,7 +917,7 @@
             critLegend.innerHTML = '';
             const critItems = [
                 { key: 'Critical', count: critCounts['Critical'], color: colors.red },
-                { key: 'Marginal', count: critCounts['Marginal'], color: colors.yellow },
+                { key: 'Marginal', count: critCounts['Marginal'], color: colors.orange },
                 { key: 'Normal', count: critCounts['Normal'], color: colors.slate }
             ];
             critItems.forEach(item => {
