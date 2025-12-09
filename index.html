@@ -448,7 +448,7 @@
                 <i class="fas fa-table-columns"></i> Dashboard
             </div>
             <div class="nav-item" id="nav-time" onclick="switchView('timeline')">
-                <i class="fas fa-clock-rotate-left"></i> History Timeline
+                <i class="fas fa-clock-rotate-left"></i> Equipment Timeline
             </div>
         </div>
 
@@ -478,7 +478,7 @@
         <div class="top-bar">
             <div class="top-left">
                 <button class="toggle-btn top-icon-btn" onclick="toggleSidebar()" style="margin-left:0; margin-right:15px;"><i class="fas fa-bars"></i></button>
-                <span id="pageTitle" class="page-header-title">Overview</span>
+                <span id="pageTitle" class="page-header-title">Dashboard</span>
                 <div class="filters-active" id="activeFilters"></div>
             </div>
             <div style="display:flex; align-items:center;">
@@ -517,7 +517,7 @@
             <div class="issuer-card">
                 <div class="issuer-header">Analysis Source</div>
                 <div class="issuer-row">
-                    <div class="issuer-label"><i class="fas fa-user-tie" style="color:var(--text-muted)"></i> Human</div>
+                    <div class="issuer-label"><i class="fas fa-user-tie" style="color:var(--text-muted)"></i> Analyst</div>
                     <div class="issuer-val" id="valAnalyst">0</div>
                 </div>
                 <div class="issuer-row">
@@ -568,7 +568,7 @@
                 </div>
                 
                 <div class="d-card a-top-equip">
-                    <div class="card-head" style="color:var(--accent-red)">Top 10 Bad Actors</div>
+                    <div class="card-head" style="color:var(--accent-red)">Top 10 Abnormal Equipment</div>
                     <div class="chart-box cb-tall"><canvas id="cTopEquip"></canvas></div>
                 </div>
 
@@ -613,7 +613,7 @@
                     <div class="card-head">Action Registry</div>
                     <div style="overflow-y:auto; height:100%;">
                         <table id="tList">
-                            <thead><tr><th>Date</th><th>Plant</th><th>Equip</th><th>Action</th><th>Remarks</th></tr></thead>
+                            <thead><tr><th>Date</th><th>Plant</th><th>Equipment</th><th>Recommended Corrective Actions</th><th>Remarks</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -1179,3 +1179,4 @@
     </script>
 </body>
 </html>
+
