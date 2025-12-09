@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,7 +93,20 @@
         .sidebar.desktop-closed { width: 0; overflow: hidden; border: none; }
         
         .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 20px; margin-bottom: 10px; flex-shrink: 0; }
-        .sidebar-logo { max-height: 40px; max-width: 180px; object-fit: contain; }
+        
+        /* Base Logo Style (Used for First Logo) */
+        .sidebar-logo { 
+            max-height: 32px; 
+            max-width: 100px; 
+            object-fit: contain; 
+        }
+
+        /* --- CHANGED: Larger Size for Second Logo --- */
+        .tata-logo {
+            max-height: 70px; /* Significantly increased */
+            max-width: 140px; 
+        }
+        
         .sidebar-close-btn { background: transparent; border: none; color: var(--text-muted); width: 32px; height: 32px; cursor: pointer; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .sidebar-close-btn:hover { background: var(--bg-body); color: var(--text-main); }
 
@@ -325,7 +337,7 @@
         .chart-box { position: relative; width: 100%; flex-grow: 1; min-height: 0; } 
         canvas { width: 100% !important; height: 100% !important; }
         
-        /* --- CHANGED: HEIGHT CONFIGURATIONS --- */
+        /* HEIGHT CONFIGURATIONS */
         .cb-standard { height: 145px; } 
         .cb-tall { height: 280px; }     
 
@@ -335,8 +347,8 @@
         .a-fault { grid-column: span 1; } .a-closed-under { grid-column: span 1; } .a-top-area { grid-column: span 1; }
         .a-trend { grid-column: span 2; } .a-saved { grid-column: span 2; } 
         
-        /* --- CHANGED: Table Height Increased --- */
-        .a-list { grid-column: span 4; height: 360px; overflow: hidden; } 
+        /* Table Height Increased */
+        .a-list { grid-column: span 4; height: 340px; overflow: hidden; } 
 
         .view-section { display: none; }
         .view-section.active-view { display: block; animation: fadeIn 0.3s ease; }
@@ -438,7 +450,11 @@
 
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="https://lgyladuiyezqccyjxqgn.supabase.co/storage/v1/object/public/Image/cbmlogo.png" alt="CBM Logo" class="sidebar-logo">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="https://lgyladuiyezqccyjxqgn.supabase.co/storage/v1/object/public/Image/cbmlogo.png" alt="CBM Logo" class="sidebar-logo">
+                <div style="height:35px; border-left:1px solid var(--text-muted); opacity:0.3;"></div>
+                <img src="https://lgyladuiyezqccyjxqgn.supabase.co/storage/v1/object/public/Image/TATA_Steel_Logo_Rev-01-removebg-preview.png" alt="Tata Steel" class="sidebar-logo tata-logo">
+            </div>
             <button class="sidebar-close-btn" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
         </div>
         
@@ -448,7 +464,7 @@
                 <i class="fas fa-table-columns"></i> Dashboard
             </div>
             <div class="nav-item" id="nav-time" onclick="switchView('timeline')">
-                <i class="fas fa-clock-rotate-left"></i> Equipment Timeline
+                <i class="fas fa-clock-rotate-left"></i> History Timeline
             </div>
         </div>
 
@@ -469,7 +485,7 @@
             </button>
             <div class="footer-credits">
                 MTR Analytics Suite v2.4<br>
-                <div style="margin-top:5px;">Developed by <span class="dev-name">Sourav Biswal</span></div>
+                <div style="margin-top:5px;">Engineered by <span class="dev-name">Sourav Biswal</span></div>
             </div>
         </div>
     </div>
@@ -517,7 +533,7 @@
             <div class="issuer-card">
                 <div class="issuer-header">Analysis Source</div>
                 <div class="issuer-row">
-                    <div class="issuer-label"><i class="fas fa-user-tie" style="color:var(--text-muted)"></i> Analyst</div>
+                    <div class="issuer-label"><i class="fas fa-user-tie" style="color:var(--text-muted)"></i> Human</div>
                     <div class="issuer-val" id="valAnalyst">0</div>
                 </div>
                 <div class="issuer-row">
@@ -568,7 +584,7 @@
                 </div>
                 
                 <div class="d-card a-top-equip">
-                    <div class="card-head" style="color:var(--accent-red)">Top 10 Abnormal Equipment</div>
+                    <div class="card-head" style="color:var(--accent-red)">Top 10 Bad Actors</div>
                     <div class="chart-box cb-tall"><canvas id="cTopEquip"></canvas></div>
                 </div>
 
@@ -613,7 +629,7 @@
                     <div class="card-head">Action Registry</div>
                     <div style="overflow-y:auto; height:100%;">
                         <table id="tList">
-                            <thead><tr><th>Date</th><th>Plant</th><th>Equipment</th><th>Recommended Corrective Actions</th><th>Remarks</th></tr></thead>
+                            <thead><tr><th>Date</th><th>Plant</th><th>Equip</th><th>Action</th><th>Remarks</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -702,7 +718,7 @@
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if(viewName === 'dashboard') document.getElementById('nav-dash').classList.add('active');
             if(viewName === 'timeline') document.getElementById('nav-time').classList.add('active');
-            const titleMap = { 'dashboard': 'Overview', 'timeline': 'Equipment History' };
+            const titleMap = { 'dashboard': 'Dashboard', 'timeline': 'Equipment Timeline' };
             document.getElementById('pageTitle').innerText = titleMap[viewName];
             if (window.innerWidth <= 768) toggleSidebar();
         }
@@ -845,7 +861,7 @@
 
             const colors = {
                 red: '#f43f5e', orange: '#f59e0b', green: '#10b981', teal: '#14b8a6', 
-                blue: '#3b82f6', purple: '#8b5cf6', slate: '#64748b'
+                blue: '#3b82f6', purple: '#8b5cf6', slate: '#64748b', yellow: '#ffdf37'
             };
 
             const plants=[...new Set(data.map(r=>r.Plant))];
@@ -853,14 +869,14 @@
                 labels:plants,
                 datasets:[
                     {label:'Critical',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Critical').length),backgroundColor:colors.red, stack:'0', borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9},
-                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:colors.orange, stack:'0', borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9}
+                    {label:'Marginal',data:plants.map(p=>data.filter(r=>r.Plant===p&&r.Criticality==='Marginal').length),backgroundColor:colors.yellow, stack:'0', borderRadius: 3, barPercentage: 0.8, categoryPercentage: 0.9}
                 ]
             }, 'Plant', { scales: { x: { stacked: true }, y: { stacked: true, display: false } } });
 
             const cats=agg('Category');
             drawChart('cCat', 'bar', {
                 labels:Object.keys(cats),
-                datasets:[{data:Object.values(cats),backgroundColor:colors.teal,label:'Count', borderRadius: 50, barThickness: 20}]
+                datasets:[{data:Object.values(cats),backgroundColor:colors.blue,label:'Count', borderRadius: 50, barThickness: 20}]
             }, 'Category');
 
             const equips=agg('Type');
@@ -892,7 +908,7 @@
                 labels: ['Critical', 'Marginal', 'Normal'],
                 datasets: [{ 
                     data: [critCounts['Critical'], critCounts['Marginal'], critCounts['Normal']], 
-                    backgroundColor: [colors.red, colors.orange, colors.slate], 
+                    backgroundColor: [colors.red, colors.yellow, colors.slate], 
                     borderWidth: 0, hoverOffset: 4 
                 }]
             }, 'Criticality', { cutout: '75%', borderRadius: 20, plugins: { legend: { display: false }, datalabels: { display: false } } });
@@ -901,7 +917,7 @@
             critLegend.innerHTML = '';
             const critItems = [
                 { key: 'Critical', count: critCounts['Critical'], color: colors.red },
-                { key: 'Marginal', count: critCounts['Marginal'], color: colors.orange },
+                { key: 'Marginal', count: critCounts['Marginal'], color: colors.yellow },
                 { key: 'Normal', count: critCounts['Normal'], color: colors.slate }
             ];
             critItems.forEach(item => {
@@ -1179,5 +1195,3 @@
     </script>
 </body>
 </html>
-
-
