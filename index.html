@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -766,7 +767,8 @@
                         if(v==='0-15 Days' && !(r._daysOld<=15)) return false;
                         if(v==='15-30 Days' && !(r._daysOld>15 && r._daysOld<=30)) return false;
                         if(v==='30-60 Days' && !(r._daysOld>30 && r._daysOld<=60)) return false;
-                        if(v==='> 60 Days' && !(r._daysOld>60)) return false;
+                        if(v==='60-90 Days' && !(r._daysOld>60 && r._daysOld<=90)) return false;
+                        if(v==='> 90 Days' && !(r._daysOld>90)) return false;
                     }
                     else if(k==='Zone'){if(r._zone!==v)return false;}
                     else if(k==='Unit'){if(r._unit!==v)return false;}
@@ -792,7 +794,13 @@
         function updateKPIs(){
             const ctx=rawData.filter(r=>{
                 for(const [k,v] of Object.entries(filters)){
-                    if(k==='Age') { if(r._drs === 'Completed') return false; if(v==='0-15 Days' && !(r._daysOld<=15)) return false; if(v==='15-30 Days' && !(r._daysOld>15 && r._daysOld<=30)) return false; if(v==='30-60 Days' && !(r._daysOld>30 && r._daysOld<=60)) return false; if(v==='> 60 Days' && !(r._daysOld>60)) return false; }
+                    if(k==='Age') { if(r._drs === 'Completed') return false;
+                    if(v==='0-15 Days' && !(r._daysOld<=15)) return false;
+                    if(v==='15-30 Days' && !(r._daysOld>15 && r._daysOld<=30)) return false;
+                    if(v==='30-60 Days' && !(r._daysOld>30 && r._daysOld<=60)) return false;
+                    if(v==='60-90 Days' && !(r._daysOld>60 && r._daysOld<=90)) return false;
+                    if(v==='> 90 Days' && !(r._daysOld>90)) return false; }
+                    
                     else if(k==='Zone'){if(r._zone!==v)return false;}
                     else if(k==='Unit'){if(r._unit!==v)return false;}
                     else if(k==='Fault'){ if(!r['Issue On Short']||!r['Issue On Short'].includes(v))return false; }
@@ -997,10 +1005,10 @@
                 fList.innerHTML+=`<div class="fault-pill ${filters['Fault']===f?'active':''}" onclick="toggleFilter('Fault','${f}')"><span><i class="fas ${icon}" style="margin-right:8px; opacity:0.7;"></i>${f}</span><b>${c}</b></div>`;
             });
 
-            const buckets={'0-15 Days':0,'15-30 Days':0,'30-60 Days':0,'> 60 Days':0};
-            filteredData.forEach(r=>{ if(r._drs!=='Completed'){ if(r._daysOld<=15)buckets['0-15 Days']++; else if(r._daysOld<=30)buckets['15-30 Days']++; else if(r._daysOld<=60)buckets['30-60 Days']++; else buckets['> 60 Days']++; } });
+            const buckets={'0-15 Days':0,'15-30 Days':0,'30-60 Days':0,'60-90 Days':0,'> 90 Days':0};
+            filteredData.forEach(r=>{ if(r._drs!=='Completed'){ if(r._daysOld<=15)buckets['0-15 Days']++; else if(r._daysOld<=30)buckets['15-30 Days']++; else if(r._daysOld<=60)buckets['30-60 Days']++; else if(r._daysOld<=90)buckets['60-90 Days']++;else buckets['> 90 Days']++; } });
             const tAge=document.getElementById('tAge'); tAge.innerHTML='';
-            const palette = ['#10b981', '#f59e0b', '#f43f5e', '#881337'];
+            const palette = ['#10b981', '#f59e0b', '#f43f5e','#F54927', '#FA1F0C'];
             Object.entries(buckets).forEach(([k,v],i)=>{
                 if(v>0) {
                     const activeClass = filters['Age'] === k ? 'active' : '';
